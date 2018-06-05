@@ -1,0 +1,598 @@
+<% include header %>
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">采购管理</strong> / <small>入库</small></div>
+</div>
+<div class="am-tabs" data-am-tabs="{noSwipe: 1}" id="doc-tab-demo-1">
+  <ul class="am-tabs-nav am-nav am-nav-tabs">
+    <li class="am-active"><a href="javascript: void(0)">未入库列表</a></li>
+    <li><a href="javascript: void(0)">待入库列表</a></li>
+    <li><a href="javascript: void(0)">入库记录查询</a></li>
+  </ul>
+
+  <div class="am-tabs-bd">
+    <div class="am-tab-panel am-active">
+      
+
+
+    	<div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 未入库列表</p>
+          <table class="am-form">
+	<tr>
+		<td>
+			<input type="text" id="k_date_s" style="cursor:pointer" readonly  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" ></input>
+		</td>
+		<td style="display: none">
+			<input type="text" id="k_store" list="list3" value="所有" onblur="setCat(1);" />
+			<datalist id="list3">
+					<%for(var i in obj4){%>
+						<option value="<%=obj4[i].name%>">
+							<%=obj4[i].name%>
+						</option>
+					<%}%>
+				</datalist>
+		</td>
+		<td style="display: none">
+			<input type="text" id="k_category" list="list4" value="所有" />
+			<datalist id="list4">
+					<%for(var i in obj3){%>
+						<option value="<%=obj3[i].name%>">
+							<%=obj3[i].name%>
+						</option>
+					<%}%>
+				</datalist>
+		</td>
+		<td>
+			<button class="am-btn am-btn-primary" onclick="getStockDate()">筛选</button>
+			<button class="am-btn am-btn-warning" onclick="window.location.reload();">查看全部</button>
+		</td>
+	</tr>
+</table>
+<div class="div_auto_stock">
+	<table class="am-table am-table-bordered am-table-radius am-table-striped table-main">
+		<thead>
+		<tr>
+			<th>日期</th>
+			<th>材料名称</th>
+			<th>材料类别</th>
+			<th>数量</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody id="contentStock">
+		</tbody>
+	</table>
+</div>
+        </div>
+      </div>
+
+
+
+    </div>
+    <div class="am-tab-panel">
+    	<!--待入库内容BEGIN-->
+    	<div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 待入库列表</p>
+          <table class="am-form">
+	<tr>
+		<td>
+			<input type="text" id="k_date_s1" style="cursor:pointer" readonly  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" ></input>
+		</td>
+		<td style="display: none">
+			<input type="text" id="k_store1" list="list3" value="所有" onblur="setCat(1);" />
+			<datalist id="list3">
+					<%for(var i in obj4){%>
+						<option value="<%=obj4[i].name%>">
+							<%=obj4[i].name%>
+						</option>
+					<%}%>
+				</datalist>
+		</td>
+		<td style="display: none">
+			<input type="text" id="k_category1" list="list4" value="所有" />
+			<datalist id="list4">
+					<%for(var i in obj3){%>
+						<option value="<%=obj3[i].name%>">
+							<%=obj3[i].name%>
+						</option>
+					<%}%>
+				</datalist>
+		</td>
+		<td>
+			<button class="am-btn am-btn-primary" onclick="getStockDate1()">筛选</button>
+			<button class="am-btn am-btn-warning" onclick="window.location.reload();">查看全部</button>
+		</td>
+	</tr>
+</table>
+<div class="div_auto_stock">
+	<table class="am-table am-table-bordered am-table-radius am-table-striped table-main">
+		<thead>
+		<tr>
+			<th>日期</th>
+			<th>材料名称</th>
+			<th>材料类别</th>
+			<th>数量</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody id="contentStock1">
+		</tbody>
+	</table>
+</div>
+        </div>
+      </div>
+    	<!--待入库内容END-->
+    </div>
+    <div class="am-tab-panel">
+      
+
+
+    <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 入库记录查询</p>
+          <table class="am-form">
+	<tr>
+		<td>
+			<input type="text" id="k_date" style="cursor:pointer;height: 40px" readonly class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"></input>
+		</td>	
+		<td>
+			<input type="text" id="k_date_end" style="cursor:pointer;height: 40px" readonly class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"></input>
+		</td>
+		<td>
+			<input type="text" id="k_name1" style="cursor:pointer;height: 40px" ></input>
+		</td>
+		<td style="display: none">
+			<input type="text" id="k_store" list="list3" value="所有" onblur="setCat(1);" />
+			<datalist id="list3">
+					<%for(var i in obj4){%>
+						<option value="<%=obj4[i].name%>">
+							<%=obj4[i].name%>
+						</option>
+					<%}%>
+				</datalist>
+			<td style="display: none">
+				<td style="display: none">
+					<input type="text" id="k_category" list="list2" value="所有" />
+					<datalist id="list2">
+					<%for(var i in obj3){%>
+						<option value="<%=obj3[i].name%>">
+					<%}%>
+				</datalist>
+				</td>
+				<td>
+					<button class="am-btn am-btn-primary" onclick="getDate()">筛选</button>
+					<button class="am-btn am-btn-warning" onclick="window.location.reload();">查看全部</button>
+					<button class="am-btn am-btn-success" onclick="toExcel()">导出Excel</button>
+					<button class="am-btn am-btn-danger" onclick="Print()">打印</button>
+				</td>
+	</tr>
+</table>
+<div class="am-panel am-panel-default">
+    <div class="am-panel-bd">材料采购总共消费金额：<span id="totalout"></span>元</div>
+</div>
+<div class="div_auto_short">
+	<table style="margin:5px;width:90%" class="am-table am-table-bordered am-table-radius am-table-striped table-main">
+		<thead>
+			<tr>
+				<th>材料名称</th>
+				<th>材料类别</th>
+				<th>数量</th>
+				<th>总价</th>
+				<th>单价</th>
+				<th>差价</th>
+				
+			</tr>
+		</thead>
+		<tbody id="content">
+		</tbody>
+	</table>
+</div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-1">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">入库数量
+      <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+    </div>
+    <div class="am-modal-bd">
+      <table class="am-table am-table-bordered">
+					<tr>
+						<td>总价</td>
+						<td><input type="text" id="total" /></td>
+					</tr>
+					<tr>
+						<td>数量</td>
+						<td><input type="text" id="num" /></td>
+					</tr>
+				</table>
+				<button type="button" class="am-btn am-btn-danger" onclick="closeDoc();">关闭
+            </button>
+				<button type="button" class="am-btn am-btn-primary" onclick="submitDoc();">
+               提交
+            </button>
+    </div>
+  </div>
+</div>
+
+	<script>
+		var g_id = 0;
+		var myDate = new Date();
+		var y = myDate.getFullYear();
+		var m = (((myDate.getMonth() + 1) + "").length == 1) ? "0" + (myDate.getMonth() + 1) : (myDate.getMonth() + 1);
+		var d = (((myDate.getDate()) + "").length == 1) ? "0" + (myDate.getDate()) : (myDate.getDate());
+		var _date = y + "-" + m + "-" + d;
+		$('.Wdate').val(_date);
+		/*获取入库列表*/
+		function getDate() {
+			//alert($("#k_name1").val());
+			$.ajax({
+				type: "POST",
+				url: "/erp/getPutIn",
+				data: {
+					k_store: $("#k_store").val(),
+					k_category: $("#k_category").val(),
+					k_date: $("#k_date").val(),
+					k_date_end: $("#k_date_end").val(),
+					k_name1:$("#k_name1").val()
+				},
+				success: function(data) {
+					var html = "";
+					var totalout = 0;
+					for(var i in data) {
+						html += "<tr>";
+						var arr1 = (data[i].name).split(".");
+						//html += "<td>" + data[i].store + "</td>";
+						//html += "<td>" + data[i].category + "</td>";
+						html += "<td>" + arr1[1] + "</td>";
+						html += "<td>" + arr1[0] + "</td>";
+						html += "<td>" + data[i].num + "</td>";
+						//html += "<td>" + data[i].unit + "</td>";
+						html += "<td>" + data[i].total + "元</td>";
+						html += "<td>" + data[i].unitPrice + "元</td>";
+						html += "<td>" + data[i].difference + "元</td>";
+						//html += "<td><button class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only' onclick='delputh(" + data[i].id + ")'>删除</button></td>";
+						html += "</tr>";
+						totalout += data[i].total;
+					}
+					$("#content").html(html);
+					//计算当天总支出
+					$('#totalout').html(totalout.toFixed(2));
+				}
+			});
+		}
+		/*新增材料*/
+		function add() {
+			if($('#category').val() == "-") {
+				alert('分类必选！');
+				return false;
+			}
+			if($('#date').val() == "") {
+				alert('日期必选！');
+				return false;
+			}
+			if($('#name').val() == "-") {
+				alert('材料必选！');
+				return false;
+			}
+			if($('#total').val() == "") {
+				alert('总价必填！');
+				return false;
+			}
+			if($('#num').val() == "") {
+				alert('数量必填！');
+				return false;
+			}
+			var tmp = $("#name").val();
+			var s = tmp.split('.');
+			var _name = "";
+			for(var i = 1; i < s.length; i++) {
+				if(_name == "") {
+					_name = s[i];
+				} else {
+					_name = _name + "." + s[i];
+				}
+			}
+			$.ajax({
+				type: "POST",
+				url: "/erp/insertPutin",
+				data: {
+					category: $("#category").val(),
+					date: $("#date").val(),
+					name: _name,
+					num: $("#num").val(),
+					total: $("#total").val()
+				},
+				success: function(data) {
+					if(data == 200) {
+						//alert('新增成功！');
+						getDate();
+						$('#name').val('');
+						$('#num').val('');
+						$('#total').val('');
+					}
+				}
+			});
+		}
+		/*删除*/
+		function del(id, name, category, unitPrice, num) {
+			var _con = confirm("是否确认删除?");
+			if(_con) {
+				$.ajax({
+					type: "POST",
+					url: "/erp/delPutin",
+					data: {
+						id: id,
+						category: category,
+						unitPrice: unitPrice,
+						name: name,
+						num: num
+					},
+					success: function(data) {
+						if(data == 200) {
+							//alert('删除成功！');
+							getDate();
+						} else {
+							alert('库存数小于当前数量，不能删除！');
+						}
+					}
+				});
+			}
+		}
+		
+		/*导出采购单Excel表*/
+		function toExcel() {
+			$.ajax({
+				type: "POST",
+				url: "/erp/toExcelputin",
+				data: {
+					k_store: $("#k_store").val(),
+					k_category: $("#k_category").val(),
+					k_date: $("#k_date").val(),
+					k_date_end: $("#k_date_end").val()
+				},
+				success: function(data) {
+					window.open("/excelop/temp/" + data);
+				}
+			});
+		}
+
+		/*导出采购单Excel表*/
+		function Print() {
+			$.ajax({
+				type: "POST",
+				url: "/erp/Printputin",
+				data: {
+					k_store: $("#k_store").val(),
+					k_category: $("#k_category").val(),
+					k_date: $("#k_date").val(),
+					k_date_end: $("#k_date_end").val(),
+					cid:window.sessionStorage.getItem("cid")
+				},
+				success: function(data) {
+					window.open("/excelop/temp/" + data);
+				}
+			});
+		}
+
+		/*获取未入库采购清单列表*/
+		function getStockDate() {
+			$.ajax({
+				type: "POST",
+				url: "/erp/getUninOrd",
+				data: {
+					k_store: $("#k_store").val(),
+					k_category: $("#k_category").val(),
+					k_date: $("#k_date_s").val()
+				},
+				success: function(data) {
+					var html = "";
+					for(var i in data) {
+						html += "<tr>";
+						var arr1 = (data[i].name).split(".");
+						html += "<td>" + data[i].date + "</td>";
+						//html += "<td>" + data[i].store + "</td>";
+						//html += "<td>" + data[i].category + "</td>";
+						html += "<td>" + arr1[1] + "</td>";
+						html += "<td>" + arr1[0] + "</td>";
+						html += "<td>" + data[i].num + "</td>";
+						//html += "<td>" + data[i].unit + "</td>";
+						html += "<td><button style='display:inline !important' class='am-btn am-btn-default am-btn-xs am-text-primary am-hide-sm-only' onclick='intoput(" + data[i].id + "," + data[i].num + ")'>添加到入库列表</button>";
+						//html += " <button style='display:inline !important' class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only' onclick='delput(" + data[i].id + ")'>删除</button></td>";
+						html += "</tr>";
+					}
+					$("#contentStock").html(html);
+				}
+			});
+		}
+
+		/*获取待入库列表*/
+		function getStockDate1() {
+			$.ajax({
+				type: "POST",
+				url: "/erp/getUninOrd1",
+				data: {
+					k_store: $("#k_store1").val(),
+					k_category: $("#k_category1").val(),
+					k_date: $("#k_date_s1").val()
+				},
+				success: function(data) {
+					var html = "";
+					for(var i in data) {
+						html += "<tr>";
+						var arr1 = (data[i].name).split(".");
+						html += "<td>" + data[i].date + "</td>";
+						//html += "<td>" + data[i].store + "</td>";
+						//html += "<td>" + data[i].category + "</td>";
+						html += "<td>" + arr1[1] + "</td>";
+						html += "<td>" + arr1[0] + "</td>";
+						html += "<td>" + data[i].num + "</td>";
+						//html += "<td>" + data[i].unit + "</td>";
+						html += "<td><button style='display:inline !important' class='am-btn am-btn-default am-btn-xs am-text-primary am-hide-sm-only' onclick='intoput1(" + data[i].id + "," + data[i].num + ")'>入库</button>";
+						html += " <button style='display:inline !important' class='am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only' onclick='delput(" + data[i].id + "," + data[i].oid + ")'>删除</button></td>";
+						html += "</tr>";
+					}
+					$("#contentStock1").html(html);
+				}
+			});
+		}
+
+		function getStockDatebyKey(key) {
+			$.ajax({
+				type: "POST",
+				url: "/erp/getUninOrd",
+				success: function(data) {
+
+					var html = "";
+					for(var i in data) {
+						if(data[i].store == key){
+							html += "<tr>";
+							html += "<td>" + data[i].date + "</td>";
+							//html += "<td>" + data[i].store + "</td>";
+							//html += "<td>" + data[i].category + "</td>";
+							html += "<td>" + data[i].no + "." + data[i].name + "</td>";
+							html += "<td>" + data[i].cname + "</td>";
+							html += "<td>" + data[i].num + "</td>";
+							html += "<td>" + data[i].unit + "</td>";
+							html += "<td><button class='btn btn-xs' onclick='intoput(" + data[i].id + "," + data[i].num + ")'>添加到入库列表</button>";
+							//html += " <button class='btn btn-xs' onclick='delput(" + data[i].id + ")'>删除</button></td>";
+							html += "</tr>";
+						}	
+					}
+					console.log(html);
+					$("#contentStock").html(html);
+					//document.getElementById("contentStock").innerHTML = html;
+				}
+			});
+		}
+		/*删除*/
+		function delput(id,oid) {
+			var _con = confirm("是否确认删除?");
+			if(_con) {
+				$.ajax({
+					type: "POST",
+					url: "/erp/delOrd1",
+					data: {
+						id: id,
+						oid:oid
+					},
+					success: function(data) {
+						if(data == 200) {
+							//alert('删除成功！');
+							window.location.reload();
+						}
+					}
+				});
+			}
+		}
+		function delputh(id){
+			var _con = confirm("是否确认删除?");
+			if(_con) {
+				$.ajax({
+					type: "POST",
+					url: "/erp/delOrdh",
+					data: {
+						id: id
+					},
+					success: function(data) {
+						if(data == 200) {
+							//alert('删除成功！');
+							window.location.reload();
+						}
+					}
+				});
+			}
+		}
+		/*待入库操作*/
+		function intoput(id, num) {
+			g_id = id;
+			$("#num").val(num);
+			//$('#addModal').modal('show');
+			var $modal = $('#doc-modal-1');
+			$modal.modal('toggle');
+		}
+
+		/*入库操作*/
+		function intoput1(id, num) {
+			g_id = id;
+			//执行入库操作
+			$.ajax({
+				type: "POST",
+				url: "/erp/insertPutin1",
+				data: {
+					id: g_id
+				},
+				success: function(data) {
+					if(data == 200) {
+						//alert('新增成功！');
+						getDate();
+						getStockDate();
+						getStockDate1();
+					}
+				}
+			});
+		}
+
+		function closeDoc(){
+			var $modal = $('#doc-modal-1');
+			$modal.modal('close');
+		}
+
+		/*确认入库*/
+		function submitDoc() {
+			var val = $('#total').val();
+			if(isNaN(val) || val == "") {
+				alert('总价请填写数字！');
+				return false;
+			}
+			//执行入库操作
+			$.ajax({
+				type: "POST",
+				url: "/erp/insertPutin",
+				data: {
+					num: $('#num').val(),
+					total: $('#total').val(),
+					id: g_id
+				},
+				success: function(data) {
+					if(data == 200) {
+						//alert('新增成功！');
+						getDate();
+						getStockDate();
+						getStockDate1();
+						var $modal = $('#doc-modal-1');
+						$modal.modal('close');
+					}
+				}
+			});
+		}
+
+		
+
+		/*根据名店加载分类*/
+		function setCat(i) {
+			if(i == 1) {
+				var h = '';
+				<%for(var i in obj3){%>
+				if('<%=obj3[i].sname%>' == $('#k_store').val()) {
+					h += '<option value="<%=obj3[i].name%>"><%=obj3[i].name%></option>';
+				}
+				<%}%>
+				$('#list2').html(h);
+			}
+		}
+
+		getDate();
+		getStockDate();
+		getStockDate1();
+	</script>
+	<% include footer %>

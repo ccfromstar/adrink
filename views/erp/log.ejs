@@ -1,0 +1,38 @@
+<% include header %>
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统管理</strong> / <small>调整记录</small></div>
+</div>
+<div class="div_auto">
+	<table style="margin:5px" class="am-table am-table-bordered am-table-radius am-table-striped table-main">
+		<tr>
+			<th>库存内容</th>
+			<th>旧数量</th>
+			<th>新数量</th>
+			<th>调整人</th>
+			<th>调整时间</th>
+		</tr>
+		
+		<%for(var i in obj){%>
+		<tr>
+			<td>
+				<%=obj[i].store%>的<%=obj[i].category%>分类的<%=obj[i].cname%>
+			</td>
+			<td>
+				<%=obj[i].old_num%>
+			</td>
+			<td>
+				<%=obj[i].num%>
+			</td>
+			<td>
+				<%=obj[i].name%>
+			</td>
+			<td>
+				<%=obj[i].createAt%>
+			</td>
+		</tr>
+
+		<%}%>
+		
+	</table>
+</div>
+<% include footer %>

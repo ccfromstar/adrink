@@ -1,0 +1,295 @@
+<% include header %>
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">财务管理</strong> / <small>日报表</small></div>
+</div>
+<!--财务日统计表-->
+<table class="am-form">
+	<tr>
+		<td>
+			<input type="text" id="k_date" style="cursor:pointer;height: 40px" readonly class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"></input>
+		</td>
+		<td>
+			<input type="text" id="k_date_end" style="cursor:pointer;height: 40px" readonly class="Wdate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"></input>
+		</td>
+		<td>
+			<input id="k_store" type="text" list="list3" placeholder="门店" onblur="setCat(1);" />
+			<datalist id="list3">
+					<option value="所有">门店</option>
+					<%for(var i in obj4){%>
+						<option value="<%=obj4[i].name%>">
+					<%}%>
+				</datalist>
+		</td>
+		<td style="display:none">
+			<input id="k_category" type="text" list="list1" placeholder="类别" />
+			<datalist id="list1">
+					<option value="所有">所有</option>
+					<%for(var i in obj3){%>
+						<option value="<%=obj3[i].name%>">
+					<%}%>
+				</datalist>
+		</td>
+		<td  style="display:none">
+			<input type="text" id="cate_id" placeholder="所属分类" list="mlist1" onblur="setMat();" />
+			<datalist id="mlist1">
+					<%for(var i in obj5){%>
+						<option value="<%=obj5[i].no%>">
+							<%=obj5[i].name%>
+						</option>
+						<%}%>
+				</datalist>
+		</td>
+		<td  style="display:none">
+			<input type="text" id="k_name" value="*.所有" placeholder ="材料名" list="mlist" />
+			<datalist id="mlist">
+					<option value="*.所有">
+					<%for(var i in obj2){%>
+						<option value="<%=obj2[i].no+"."+obj2[i].name%>">
+							<%}%>
+				</datalist>
+		</td>
+		<td>
+			<input type="text" id="s_name" placeholder="材料名检索"  />
+		</td>
+		<td>
+			<button class="am-btn am-btn-primary" onclick="filter()">筛选</button>
+		</td>
+	</tr>
+</table>
+<br/>
+<div class="am-tabs" data-am-tabs="{noSwipe: 1}" id="doc-tab-demo-1">
+  <ul class="am-tabs-nav am-nav am-nav-tabs">
+    <li class="am-active"><a href="javascript: void(0)">入库消费情况</a></li>
+    <li><a href="javascript: void(0)">出库消耗情况</a></li>
+  </ul>
+
+  <div class="am-tabs-bd">
+    <div class="am-tab-panel am-active">
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 入库消费情况</p>
+          <div class="am-panel am-panel-default">
+			    <div class="am-panel-bd">总入库消费金额：<span id="totalout"></span>元，总差价<span id="totaldif"></span>元 <button class="am-btn am-btn-primary" onclick="toExcelin()">导出入库Excel</button></div>
+			</div>
+		   <table style="margin:5px;width:94%" class="am-table am-table-bordered am-table-radius am-table-striped table-main">
+		<thead><tr>
+			<th>日期</th>
+			
+			<th>材料名称</th>
+			<th>类别</th>
+			<th>数量</th>
+			
+			<th>总价</th>
+			<th>单价</th>
+			<th>差价</th>
+		</tr></thead>
+		<tbody id="content">
+		</tbody>
+	</table>
+        </div>
+      </div>
+    </div>
+    <div class="am-tab-panel">
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 出库消耗情况</p>
+          <div class="am-panel am-panel-default">
+		    <div class="am-panel-bd">总出库消耗的材料费用：<span id="totaluse"></span>元 <button class="am-btn am-btn-primary" onclick="toExcelout()">导出出库Excel</button></div>
+		</div>
+		<div class="div_auto_stock">
+	<table style="margin:5px;width:94%" class="am-table am-table-bordered am-table-radius am-table-striped table-main">
+		<thead><tr>
+			<th>日期</th>
+			<th>门店</th>
+			<th>材料名称</th>
+			<th>类别</th>
+			<th>数量</th>
+			<th>单价</th>
+			<th>总价</th>
+		</tr></thead>
+		<tbody id="contentuse">
+		</tbody>
+	</table>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	var myDate = new Date();
+	var y = myDate.getFullYear();
+	var m = (((myDate.getMonth() + 1) + "").length == 1) ? "0" + (myDate.getMonth() + 1) : (myDate.getMonth() + 1);
+	var d = (((myDate.getDate()) + "").length == 1) ? "0" + (myDate.getDate()) : (myDate.getDate());
+	var _date = y + "-" + m + "-" + d;
+	$('.Wdate').val(_date);
+	/*获取入库列表*/
+	function getDate() {
+		var tmp = $("#k_name").val();
+		var s = tmp.split('.');
+		$.ajax({
+			type: "POST",
+			url: "/erp/getPutInbyDay",
+			data: {
+				k_store: $("#k_store").val(),
+				k_category: $("#k_category").val(),
+				k_date: $("#k_date").val(),
+				k_date_end: $("#k_date_end").val(),
+				k_name: s[1],
+				k_cate_id: $("#cate_id").val(),
+				s_name:$("#s_name").val()
+			},
+			success: function(data) {
+				var html = "";
+				var totalout = 0;
+				var totaldif = 0;
+				for(var i in data) {
+					var arr1 = (data[i].name).split(".");
+					html += "<tr>";
+					html += "<td>" + data[i].date + "</td>";
+					//html += "<td>" + data[i].store + "</td>";
+					html += "<td>" + arr1[1] + "</td>";
+					html += "<td>" + arr1[0] + "</td>";
+					html += "<td>" + data[i].num + "</td>";
+					//html += "<td>" + data[i].unit + "</td>";
+					html += "<td>" + data[i].total + "元</td>";
+					html += "<td>" + data[i].unitPrice + "元</td>";
+					html += "<td>" + data[i].difference + "元</td>";
+					html += "</tr>";
+					totalout += data[i].total;
+					totaldif += data[i].difference;
+				}
+				totalout = Math.round(totalout * 100) / 100;
+				totaldif = Math.round(totaldif * 100) / 100;
+				$("#content").html(html);
+				//计算当天总支出和总差价
+				$('#totalout').html(totalout);
+				$('#totaldif').html(totaldif);
+			}
+		});
+	}
+	/*获取出库列表*/
+	function getDateUse() {
+		var tmp = $("#k_name").val();
+		var s = tmp.split('.');
+		$.ajax({
+			type: "POST",
+			url: "/erp/getPutoutbyDay",
+			data: {
+				k_store: $("#k_store").val(),
+				k_category: $("#k_category").val(),
+				k_date: $("#k_date").val(),
+				k_date_end: $("#k_date_end").val(),
+				k_name: s[1],
+				s_name:$("#s_name").val()
+			},
+			success: function(data) {
+				var html = "";
+				var totaluse = 0;
+				for(var i in data) {
+					var arr1 = (data[i].name).split(".");
+					html += "<tr>";
+					html += "<td>" + data[i].date + "</td>";
+					html += "<td>" + data[i].store + "</td>";
+					html += "<td>" + arr1[1] + "</td>";
+					html += "<td>" + arr1[0] + "</td>";
+					html += "<td>" + data[i].num + "</td>";
+					html += "<td>" + data[i].unitPrice + "元</td>";
+					html += "<td>" + data[i].total + "元</td>";
+					html += "</tr>";
+					totaluse += data[i].total;
+				}
+				$("#contentuse").html(html);
+				//计算当天总消耗
+				totaluse = Math.round(totaluse * 100) / 100;
+				$('#totaluse').html(totaluse);
+			}
+		});
+	}
+
+	function filter() {
+		getDate();
+		getDateUse();
+	}
+	//filter();
+
+	/*根据名店加载分类*/
+	function setCat(i) {
+		if(i == 1) {
+			var h = '';
+			<%for(var i in obj3){%>
+			if('<%=obj3[i].sname%>' == $('#k_store').val()) {
+				h += '<option value="<%=obj3[i].name%>"><%=obj3[i].name%></option>';
+			}
+			<%}%>
+			$('#list1').html(h);
+		}
+	}
+	
+	function filtermlist(){
+		var v = $('#s_name').val();
+		var html = '';
+		<%for(var i in obj2){%>
+		var n = '<%=obj2[i].name%>';
+		if(n.indexOf(v) != -1){
+			html += '<option value="<%=obj2[i].no+"."+obj2[i].name%>">';
+		}			
+		<%}%>
+		$('#mlist').html(html);
+	}
+	
+	function setMat(){
+		var v = $('#cate_id').val();
+		var html = '';
+		<%for(var i in obj2){%>
+		var n = '<%=obj2[i].no%>';
+		if(n == v){
+			html += '<option value="<%=obj2[i].no+"."+obj2[i].name%>">';
+		}			
+		<%}%>
+		$('#mlist').html(html);
+	}
+	
+	/*导出入库Excel表*/
+	function toExcelin() {
+		var tmp = $("#k_name").val();
+		var s = tmp.split('.');
+		$.ajax({
+			type: "POST",
+			url: "/erp/toExcelputinD",
+			data: {
+				k_store: $("#k_store").val(),
+				k_category: $("#k_category").val(),
+				k_date: $("#k_date").val(),
+				k_date_end: $("#k_date_end").val(),
+				k_name: s[1],
+				k_cate_id: $("#cate_id").val()
+			},
+			success: function(data) {
+				window.open("/excelop/temp/" + data);
+			}
+		});
+	}
+	/*导出出库Excel表*/
+	function toExcelout() {
+		var tmp = $("#k_name").val();
+		var s = tmp.split('.');
+		$.ajax({
+			type: "POST",
+			url: "/erp/toExcelputoutD",
+			data: {
+				k_store: $("#k_store").val(),
+				k_category: $("#k_category").val(),
+				k_date: $("#k_date").val(),
+				k_date_end: $("#k_date_end").val(),
+				k_name: s[1],
+				k_cate_id: $("#cate_id").val() 
+			},
+			success: function(data) {
+				window.open("/excelop/temp/" + data);
+			}
+		});
+	}
+</script>
+<% include footer %>

@@ -1,0 +1,237 @@
+<% include header %>
+<div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">系统管理</strong> / <small>用户权限</small></div>
+</div>
+<table  class="am-form" style="margin:5px">
+	<tr>
+		<td>
+			<input type="text" id="username" placeholder="用户名" />
+		</td>
+		<td>
+			<input type="text" id="password" placeholder="密码" />
+		</td>
+		<td>
+			<input type="text" id="name" placeholder="姓名" />
+		</td>
+		<td>
+			<input id="role_id" type="text" placeholder="权限" list="list1" />
+			<datalist id="list1">
+					<%for(var i in obj2){
+						if(obj2[i].id != 6){%>
+						<option value="<%=obj2[i].id%>">
+							<%=obj2[i].name%>
+						</option>
+					<%}}%>
+				</datalist>
+		</td>
+		<td id="list_detail" style="display:none" >
+			<input name="r_list1" type="checkbox" value="1" /> 采购清单
+			<input name="r_list2" type="checkbox" value="1" /> 入库
+			<input name="r_list3" type="checkbox" value="1" /> 库存数
+			<input name="r_list4" type="checkbox" value="1" /> 出库
+			<input name="r_list5" type="checkbox" value="1" /> 日报表
+			<input name="r_list6" type="checkbox" value="1" /> 月报表
+			<input name="r_list7" type="checkbox" value="1" /> 门店
+			<input name="r_list8" type="checkbox" value="1" /> 分类
+			<input name="r_list9" type="checkbox" value="1" /> 材料类别
+			<input name="r_list10" type="checkbox" value="1" /> 材料
+			<input name="r_list11" type="checkbox" value="1" /> 用户权限
+		</td>
+		<td>
+			<input id="store" type="text" placeholder="门店" list="list2" />
+			<datalist id="list2">
+					<%for(var i in obj3){%>
+						<option value="<%=obj3[i].name%>">
+							<%=obj3[i].name%>
+						</option>
+					<%}%>
+				</datalist>
+		</td>
+		<td>
+			<button class="am-btn am-btn-primary" onclick="add()">新增</button>
+		</td>
+	</tr>
+</table>
+<div class="div_auto">
+	<table style="margin:5px" class="am-table am-table-bordered am-table-radius am-table-striped table-main">
+		<tr>
+			<th>用户名</th>
+			<th>密码</th>
+			<th>姓名</th>
+			<th>权限</th>
+			<th>所属门店</th>
+			<th>操作</th>
+		</tr>
+		
+		
+		<%for(var i in obj){%>
+		<tr>
+			<td>
+				<%=obj[i].username%>
+			</td>
+			<td>
+				<%=obj[i].password%>
+			</td>
+			<td>
+				<%=obj[i].name%>
+			</td>
+			<td>
+				<%=obj[i].cname%>
+			</td>
+			<td>
+				<%=obj[i].store%>
+			</td>
+			<td>
+				<button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="del(<%=obj[i].id%>)"><span class="am-icon-trash-o"></span>删除</button>
+			</td>
+		</tr>
+
+		<%}%>
+		
+	</table>
+	<p style="margin:5px">权限指南：</p>
+	<div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 申请者</p>
+          <p>申请者只能看到自己门店的采购管理-采购清单，可以添加采购清单</p>
+        </div>
+      </div>
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 采购员</p>
+          <p>采购员只能看到自己门店的采购管理-采购清单，不可以添加采购清单</p>
+        </div>
+      </div>
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 仓管</p>
+          <p>仓管只能看到自己门店的采购管理-入库，库存管理-库存数和库存管理-出库</p>
+        </div>
+      </div>
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 财务</p>
+          <p>财务只能看到自己门店的财务管理-日报表，财务管理-月报表</p>
+        </div>
+      </div>
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 门店管理员</p>
+          <p>可以看到自己门店的除了系统管理外的所有内容</p>
+        </div>
+      </div>
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 超级管理员</p>
+          <p>可以看到自己门店的所有内容</p>
+        </div>
+      </div>
+      <div class="am-panel am-panel-default admin-sidebar-panel">
+        <div class="am-panel-bd">
+          <p><span class="am-icon-bookmark"></span> 自定义</p>
+          <p>可以自己定义权限</p>
+        </div>
+      </div>
+</div>
+<script>
+	function getRolebyKey(key,name) {
+		var html = "";
+		<%for(var i in obj){%>
+						if("<%=obj[i].store%>" == key){
+							html += "<tr>";
+							html += "<td><%=obj[i].username%></td>";
+							html += "<td><%=obj[i].password%></td>";
+							html += "<td><%=obj[i].name%></td>";
+							html += "<td><%=obj[i].cname%></td>";
+							html += "<td><%=obj[i].store%></td>";
+							if("<%=obj[i].name%>" == name){
+								html += "<td></td>";
+							}else{
+								html += "<td><button class='btn btn-xs' onclick='del(<%=obj[i].id%>)''>删除</button></td>";
+							}
+							
+							html += "</tr>";
+						}	
+		<%}%>
+		$("#content").html(html);
+	}
+	
+	function jqchk(name){ //jquery获取复选框值
+	    var chk_value = '';
+	    $('input[name="' + name + '"]:checked').each(function (){
+	        if (chk_value == ""){
+	            chk_value = $(this).val();
+	        }else{
+	            chk_value = chk_value + "*" + $(this).val();
+	        }
+	    }
+	    );
+	    return chk_value;
+	}
+
+	function add() {
+		/*设置自定义权限*/
+		var r_list1 = (jqchk("r_list1"))==1?1:0;
+		var r_list2 = (jqchk("r_list2"))==1?1:0;
+		var r_list3 = (jqchk("r_list3"))==1?1:0;
+		var r_list4 = (jqchk("r_list4"))==1?1:0;
+		var r_list5 = (jqchk("r_list5"))==1?1:0;
+		var r_list6 = (jqchk("r_list6"))==1?1:0;
+		var r_list7 = (jqchk("r_list7"))==1?1:0;
+		var r_list8 = (jqchk("r_list8"))==1?1:0;
+		var r_list9 = (jqchk("r_list9"))==1?1:0;
+		var r_list10 = (jqchk("r_list10"))==1?1:0;
+		var r_list11 = (jqchk("r_list11"))==1?1:0;
+		var r_list = r_list1 + "*" + r_list2  + "*" + r_list3  + "*" + r_list4  + "*" + r_list5  + "*" + r_list6  + "*" + r_list7  + "*" + r_list8  + "*" + r_list9  + "*" + r_list10  + "*" + r_list11;
+		$.ajax({
+			type: "POST",
+			url: "/erp/insertRole",
+			data: {
+				username: $("#username").val(),
+				password: $("#password").val(),
+				name: $("#name").val(),
+				role_id: $("#role_id").val(),
+				store: $("#store").val(),
+				rolelist: r_list
+			},
+			success: function(data) {
+				if(data == 200) {
+					//alert('新增成功！');
+					window.location.reload();
+				}
+			}
+		});
+	}
+
+	function del(id) {
+		var _con = confirm("是否确认删除?");
+		if(_con) {
+			$.ajax({
+				type: "POST",
+				url: "/erp/delRole",
+				data: {
+					id: id
+				},
+				success: function(data) {
+					if(data == 200) {
+						//alert('删除成功！');
+						window.location.reload();
+					}
+				}
+			});
+		}
+	}
+	
+	function set_list_detail(){
+		if($('#role_id').val() == 7){
+			$('#list_detail').show();
+		}else{
+			$('#list_detail').hide();
+		}
+	}
+	
+	setInterval(function(){
+		set_list_detail();
+	},1000);
+</script>
+<% include footer %>
