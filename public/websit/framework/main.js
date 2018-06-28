@@ -46,8 +46,20 @@ $(function(){
 	txtFooter += '			<div style="margin-left:90px;margin-top:-30px;">账号登陆</div><br>';
 	txtFooter += '			<div><input type="text" id="mobile" style="width:240px;height: 32px;" name="" placeholder="手机号码"></div><br>';
 	txtFooter += '			<div><input type="password" id="pwd" style="width:240px;height: 32px;" name="" placeholder="登陆密码"></div>';
-	txtFooter += '			<div style="margin:5px;width:240px;text-align:right">忘记密码&nbsp;&nbsp;</div>';
+	txtFooter += '			<div onclick="showForget()" style="margin:5px;width:240px;text-align:right;cursor:pointer;">忘记密码&nbsp;&nbsp;</div>';
 	txtFooter += '			<div onclick="loginUser()" style="padding: 5px;background:rgb(5,165,210);display: inline-block;color:white;cursor: pointer;width:240px;text-align: center;border-radius: 5px;">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陆</div>';
+	txtFooter += '	</div>';
+
+	txtFooter += '<div id="forgetk" style="display:none;width:400px;height: 300px;border-radius: 20px;background: white;box-shadow:0px 0px 15px #888888; position: fixed;top:30%;left:40%;padding: 80px;">';
+	txtFooter += '			<div>请输入您的登陆名</div><br>';
+	txtFooter += '			<div><input type="text" id="mobile1" style="width:240px;height: 32px;" name="" placeholder="手机号码"></div><br>';
+	txtFooter += '			<div onclick="sendSMS()" style="padding: 5px;background:rgb(5,165,210);display: inline-block;color:white;cursor: pointer;width:240px;text-align: center;border-radius: 5px;">下一步</div>';
+	txtFooter += '	</div>';
+
+	txtFooter += '<div id="forgetk2" style="display:none;width:400px;height: 300px;border-radius: 20px;background: white;box-shadow:0px 0px 15px #888888; position: fixed;top:30%;left:40%;padding: 80px;">';
+	txtFooter += '			<div>登陆密码已发送至您的手机，请查收。</div><br>';
+	//txtFooter += '			<div><input type="text" id="mobile1" style="width:240px;height: 32px;" name="" placeholder="手机号码"></div><br>';
+	txtFooter += '			<div onclick="gotologin()" style="padding: 5px;background:rgb(5,165,210);display: inline-block;color:white;cursor: pointer;width:240px;text-align: center;border-radius: 5px;">返回登陆</div>';
 	txtFooter += '	</div>';
 
 	$("#footer").html(txtFooter);
@@ -87,6 +99,21 @@ function referTo(i){
 	}
 }
 
+function showForget(){
+	$("#logink").css("display","none");
+	$("#forgetk").css("display","inline-block");
+}
+
+function sendSMS(){
+	var mobile = $("#mobile1").val();
+	
+	if(mobile == ""){
+		alert("用户手机号必填！");return false;
+    }
+	$("#forgetk").css("display","none");
+	$("#forgetk2").css("display","inline-block");
+}
+
 function loginUser(){
 	var mobile = $("#mobile").val();
 	var pwd = $("#pwd").val();
@@ -119,6 +146,7 @@ function gotoreg(){
 }
 
 function gotologin(){
+	$("#forgetk2").css("display","none");
 	$("#logink").css("display","inline-block");
 }
 

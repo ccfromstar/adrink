@@ -23,6 +23,8 @@ module.exports = function (app, routes) {
     
     //app.get('/view_news',routes.erp_view_news);
 
+    app.get('/erp',routes.erp_home);
+
     app.get('/getopenid',routes.getopenid);
     app.post('/service/:sql',routes.servicedo);
     app.get('/erp/role',routes.erp_role);
