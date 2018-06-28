@@ -12,6 +12,8 @@
 		<script src="/plugin/select2/dist/js/select2.min.js"></script>
 		<script src="../framework/amazeui/amazeui.min.js"></script>
 		<link rel="stylesheet" href="../framework/css/admin.css">
+    <script type="text/javascript" src="../framework/Kindeditor/kindeditor-min.js"></script>
+    <script type="text/javascript" src="../framework/Kindeditor/lang/zh_CN.js"></script>
 		<script src="/js/basic.js"></script>
 		<script src="/js/check.js"></script>
     <style type="text/css">
@@ -51,7 +53,7 @@
         <li class="admin-parent">
           <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-file"></span> 用户管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
           <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
-            <li><a href="/erp/index" class="am-cf"><span class="am-icon-puzzle-piece"></span> 权限管理</a></li>
+            <li><a href="/erp/role" class="am-cf"><span class="am-icon-puzzle-piece"></span> 权限管理</a></li>
           </ul>
         </li>
         <li class="admin-parent">
@@ -80,9 +82,9 @@
           </ul>
         </li>
         <li class="admin-parent">
-          <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-sign-out"></span> 系统管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+          <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-sign-out"></span> 日常管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
           <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
-            <li><a href="/erp/gys" class="am-cf"><span class="am-icon-puzzle-piece"></span> 基础数据管理</a></li>
+            <li><a href="/erp/view_news" class="am-cf"><span class="am-icon-puzzle-piece"></span> 最新消息维护</a></li>
           </ul>
         </li>
       </ul>
@@ -98,4 +100,4 @@
   <!-- sidebar end -->
   <!-- content start -->
   <div class="admin-content">
-    <div class="admin-content-body">
+    <div class="admin-content-body" >

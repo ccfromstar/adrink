@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>爱饮(上海)</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		
+		<link rel="stylesheet" href="../framework/amazeui/amazeui.min.css" />
+
+		<script src="../framework/jquery-1.9.1.js"></script>
+		<script src="../framework/amazeui/amazeui.min.js"></script>
+		<script src="../framework/main.js"></script>
+		
+		<link rel="stylesheet" href="../framework/css/admin.css">
+
+		<style>
+			.none{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!--header-->
+		<div id="header" class="bgheader"></div>
+		<!--菜单-->
+		<div id="menu" class="bgmenu"></div>
+		<!--主页内容-->
+		<div id="main_top" class="bgmain_top1">
+			<div class="w960">
+				<br/><br/>
+				<div style="width:960px;text-align: center;margin-top: 30px">
+					<div style="font-weight: bold;font-size: 24px;">用户注册</div>
+					<div style="font-size: 20px;border-top:3px solid red;width:200px;margin: auto">REGISTRATION</div>
+				</div>
+				<br/>
+				<div style="width:500px;background-color: white;height: 500px;border-radius: 10px;margin: auto;padding: 30px">
+					<div>手机号码</div>
+					<div><input type="" id="mobile" style="width:440px;height: 32px;" name=""></div>
+					<br/>
+					<div>输入验证码</div>
+					<div><input type="" name="" style="width:354px;height: 32px;"> <span style="padding: 5px;background:rgb(5,165,210);display: inline-block;color:white;cursor: pointer;">发送验证码</span></div>
+					<br/>
+					<div>登陆密码（字母与数字组合不少于6位）</div>
+					<div><input type="password" id="pwd1" style="width:440px;height: 32px;" name=""></div>
+					<br/>
+					<div>再次输入密码</div>
+					<div><input type="password" id="pwd2" style="width:440px;height: 32px;" name=""></div>
+					<br/>
+					<div><div style="padding: 5px;background:rgb(5,165,210);display: inline-block;color:white;width:440px;text-align: center;cursor: pointer;" onclick="reg()">创建账户</div></div>
+				</div>
+				<br/>
+			</div>
+		</div>
+		<div id="successinfo" style="display:none;width:400px;height: 300px;border-radius: 20px;background: white;box-shadow:0px 0px 15px #888888; position: fixed;top:40%;left:40%;padding: 80px;">
+				<div>恭喜您完成注册！</div>
+				<div>您可以进入个人中心修改您的个人信息</div>
+				<br><br><br>
+				<div onclick="window.location='index.html';" style="padding: 5px;background:rgb(5,165,210);display: inline-block;color:white;cursor: pointer;width:250px;text-align: center;border-radius: 5px;">前往在线商城</div>
+		</div>
+		<!--footer-->
+		<div id="footer" class="bgfooter"></div>
+		<script type="text/javascript">
+			function reg(){
+				var mobile = $("#mobile").val();
+				var pwd1 = $("#pwd1").val();
+				var pwd2 = $("#pwd2").val();
+				if(mobile == ""){
+					alert("用户手机号必填！");return false;
+				}
+				if(pwd1 == ""){
+					alert("密码必填！");return false;
+				}
+				if(pwd2 == ""){
+					alert("确认密码必填！");return false;
+				}
+				if(pwd1 != pwd2){
+					alert("两次填写的密码不一致！");return false;
+				}
+				$.ajax({
+						type: "post",
+						url: "/service/createUser",
+						data: {
+							mobile:mobile,
+							pwd:pwd1
+						},
+						success: function(data) {
+							$("#successinfo").css("display","inline-block");
+							window.sessionStorage.sessionID = mobile;
+						}
+				});
+			}
+		</script>
+	</body>
+</html>
