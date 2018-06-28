@@ -3,11 +3,11 @@ $(function(){
 	var txtHeader = '';
 	txtHeader += '<div class="w960" style="text-align:right">';
 	if(sessionID){
-		txtHeader += '欢迎您，'+sessionID+' <img src="../framework/order.png" style="height:20px;margin-left:20px;margin-top:-5px" /> 我的订单 ';
+		txtHeader += '欢迎您，'+sessionID+' <span style="margin-left:10px;cursor:pointer;" onclick="gotologout()">登出</span> <img src="../framework/order.png" style="height:20px;margin-left:10px;margin-top:-5px" /> 我的订单 ';
 	txtHeader += '<div class="cw-icon"><i class="ci-count" id="shopping-amount">0</i><img style="height:25px;margin-left:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
 	
 	}else{
-		txtHeader += '<span style="margin-left:20px">登录</span> | <span style="cursor:pointer;" onclick="gotoreg()">注册</span> ';
+		txtHeader += '<span style="margin-left:20px;cursor:pointer;" onclick="gotologin()">登录</span> | <span style="cursor:pointer;" onclick="gotoreg()">注册</span> ';
 	
 	}
 	txtHeader += '</div>';
@@ -42,6 +42,14 @@ $(function(){
 	txtFooter += '</div>';
 	txtFooter += '<div class="w960" style="text-align:center;margin-top:80px;padding-bottom:10px">沪ICP证130164号<span style="margin-left:30px">Copyright ©</span> 2018 AIYIN All Rights Reserved.';
 	txtFooter += '</div>';
+	txtFooter += '<div id="logink" style="display:none;width:400px;height: 300px;border-radius: 20px;background: white;box-shadow:0px 0px 15px #888888; position: fixed;top:30%;left:40%;padding: 80px;">';
+	txtFooter += '			<div style="margin-left:90px;margin-top:-30px;">账号登陆</div><br>';
+	txtFooter += '			<div><input type="text" id="mobile" style="width:240px;height: 32px;" name="" placeholder="手机号码"></div><br>';
+	txtFooter += '			<div><input type="password" id="pwd" style="width:240px;height: 32px;" name="" placeholder="登陆密码"></div>';
+	txtFooter += '			<div style="margin:5px;width:240px;text-align:right">忘记密码&nbsp;&nbsp;</div>';
+	txtFooter += '			<div onclick="loginUser()" style="padding: 5px;background:rgb(5,165,210);display: inline-block;color:white;cursor: pointer;width:240px;text-align: center;border-radius: 5px;">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陆</div>';
+	txtFooter += '	</div>';
+
 	$("#footer").html(txtFooter);
 
 	var url = window.location.href;
@@ -79,6 +87,42 @@ function referTo(i){
 	}
 }
 
+function loginUser(){
+	var mobile = $("#mobile").val();
+	var pwd = $("#pwd").val();
+	if(mobile == ""){
+		alert("用户手机号必填！");return false;
+    }
+    if(pwd == ""){
+		alert("密码必填！");return false;
+	}
+	$.ajax({
+		type: "post",
+		url: "/service/checkUser",
+		data: {
+			mobile:mobile,
+			pwd:pwd
+		},
+		success: function(data) {
+			if(data == "200"){
+				window.sessionStorage.sessionID = mobile;
+				window.location.reload();
+			}else{
+				alert("登陆失败，用户名或密码错误！");
+			}
+		}
+	});
+}
+
 function gotoreg(){
 	window.location = 'reg.html';
+}
+
+function gotologin(){
+	$("#logink").css("display","inline-block");
+}
+
+function gotologout(){
+	sessionStorage.removeItem('sessionID');
+	window.location.reload();
 }

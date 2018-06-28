@@ -203,7 +203,24 @@ exports.servicedo = function(req, res) {
 				res.send("400");
 			}
 		});
-	} else if(_sql == "getRole") {
+	} else if(_sql == "checkUser") {
+		var mobile = req.param("mobile");
+		var pwd = req.param("pwd");
+		var sql = "select * from user where mobile = '" + mobile + "'";
+		console.log(sql);
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			if(!result[0]) {
+				res.send("400");
+				return;
+			}
+			if(result[0].pwd == pwd) {
+				res.send("200");
+			} else {
+				res.send("400");
+			}
+		});
+	}  else if(_sql == "getRole") {
 		var sql = "select * from c_role";
 		mysql.query(sql, function(err, result) {
 			if(err) return console.error(err.stack);
