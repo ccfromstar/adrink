@@ -29,6 +29,15 @@ module.exports = function (app, routes) {
     app.post('/service/:sql',routes.servicedo);
     app.get('/erp/role',routes.erp_role);
     app.get('/erp/view_news',routes.erp_view_news);
+    app.get('/erp/view_product',routes.erp_view_product);
+
     app.get('/news',routes.news);
     app.post('/news/:sql',routes.newsdo);
+
+    app.get('/product',routes.product);
+    app.post('/product/:sql',routes.productdo);
+
+    app.get('/_upload',routes._upload);
+    app.get('/_uploadsuccess',routes._uploadsuccess);
+    app.post('/_uploaddo',routes._uploaddo);
 };

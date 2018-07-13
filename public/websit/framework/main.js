@@ -17,9 +17,9 @@ $(function(){
 	txtMenu += '<div class="w960">';
 	txtMenu += '<div style="float:left"><img src="../framework/logo1.png" style="height:80px;margin-top:10px" /></div>';
 	txtMenu += '<div style="float:left;margin-top:60px;margin-left:20px">';
-	txtMenu += '<span class="menu_span" id="m1" style="cursor:pointer;" onclick="referTo(0)">首页</span> | <span class="menu_span" id="m2" style="cursor:pointer;" onclick="referTo(1)">关于我们</span> | <span class="menu_span" id="m3" style="cursor:pointer;" onclick="referTo(2)">主营业务</span> | <span class="menu_span" id="m4">在线商城</span>';
+	txtMenu += '<span class="menu_span" id="m1" style="cursor:pointer;" onclick="referTo(0)">首页</span> | <span class="menu_span" id="m2" style="cursor:pointer;" onclick="referTo(1)">关于我们</span> | <span class="menu_span" id="m3" style="cursor:pointer;" onclick="referTo(2)">主营业务</span> | <span class="menu_span" id="m4" style="cursor:pointer;" onclick="referTo(3)">在线商城</span>';
 	txtMenu += '</div>';
-	txtMenu += '<div style="float:right;margin-top:60px;"><input type="text" style="width:200px" placeholder=" 搜索商品"></input><img style="height:30px;margin-left:10px" src="../framework/search.png" /></div>';
+	txtMenu += '<div style="float:right;margin-top:60px;"><input id="pname" type="text" style="width:200px" placeholder=" 搜索商品"></input><img onclick="searchPro()" style="cursor:pointer;height:30px;margin-left:10px" src="../framework/search.png" /></div>';
 	txtMenu += '<div style="clear:both"></div>';
 	txtMenu += '</div>';
 	$("#menu").html(txtMenu);
@@ -30,7 +30,7 @@ $(function(){
 	txtFooter += '<dl class="fdl"><dt style="margin-top:19px" onclick="referTo(0)">首页</dt><dd></dd></dl>';
 	txtFooter += '<dl class="fdl"><dt>关于我们</dt><dd onclick="referTo(1)">公司简介</dd><dd onclick="referTo(11)">最新消息</dd><dd onclick="referTo(12)">联系我们</dd></dl>';
 	txtFooter += '<dl class="fdl"><dt>主营业务</dt><dd onclick="referTo(2)">自主售货机</dd><dd onclick="referTo(21)">预包装食品</dd><dd onclick="referTo(22)">电子设备</dd></dl>';
-	txtFooter += '<dl class="fdl"><dt>在线商城</dt><dd>饮料系列</dd><dd>零食系列</dd><dd>甜点系列</dd><dd>冰淇凌系列</dd></dl>';
+	txtFooter += '<dl class="fdl"><dt>在线商城</dt><dd onclick="referTo(3)">饮料系列</dd><dd onclick="referTo(3)">零食系列</dd><dd onclick="referTo(3)">甜点系列</dd><dd onclick="referTo(3)">冰淇凌系列</dd></dl>';
 	txtFooter += '</div>';
 	txtFooter += '<div style="float:left;margin-top:20px;margin-left:20px">';
 	txtFooter += '<div class="footer_1">客服热线</div>';
@@ -74,7 +74,15 @@ $(function(){
 	if(url.indexOf("zy")!=-1){
 		$("#m3").css("color","red");
 	}
+	if(url.indexOf("mall")!=-1){
+		$("#m4").css("color","red");
+	}
 });
+
+function searchPro(){
+	sessionStorage.pname = $("#pname").val();
+	window.location = 'mall.html';
+}
 
 function exitUser(){
 	sessionStorage.authorize = 0;
@@ -88,6 +96,8 @@ function referTo(i){
 		window.location = "index.html";
 	}else if(i==2){
 		window.location = "zy1.html";
+	}else if(i==3){
+		window.location = "mall.html";
 	}else if(i==11){
 		window.location = "newinfo.html";
 	}else if(i==12){
@@ -102,6 +112,10 @@ function referTo(i){
 function showForget(){
 	$("#logink").css("display","none");
 	$("#forgetk").css("display","inline-block");
+}
+
+function openDetail(id){
+	window.location = 'proDetail.html?id='+id;
 }
 
 function sendSMS(){

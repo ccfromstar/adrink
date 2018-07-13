@@ -37,7 +37,7 @@
 				<div style="clear:both;"></div>
 			</div>
 		</div>
-		<div class="bgmain">
+		<div class="bgmain" >
 			<!--翻页广告区-->
 			<div class="w960">
 				<img style="margin-top:30px;margin-left:7px;width:946px;" src="../framework/adv1.png">
@@ -49,82 +49,7 @@
 					<div style="font-size: 20px;border-top:3px solid red;width:200px;margin: auto">NEW PRODUCTS</div>
 				</div>
 
-				<div style="float:left;text-align:center;width:33.3%">
-					<div class="main_image"></div>
-					<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">
-						<div style="font-size: 16px;">产品名称</div>
-						<div style="color: rgb(102,198,232);height: 40px;">产品特色</div>
-						<div>
-							<div style="float:left;color:red;font-size: 16px;">￥ 39.90</div>
-							<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>
-							<div style="clear:both;"></div>
-						</div>
-					</div>
-				</div>
-				<div style="float:left;text-align:center;width:33.3%">
-					<div class="main_image"></div>
-					<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">
-						<div style="font-size: 16px;">产品名称</div>
-						<div style="color: rgb(102,198,232);height: 40px;">产品特色</div>
-						<div>
-							<div style="float:left;color:red;font-size: 16px;">￥ 39.90</div>
-							<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>
-							<div style="clear:both;"></div>
-						</div>
-					</div>
-				</div>
-				<div style="float:left;text-align:center;width:33.3%">
-					<div class="main_image"></div>
-					<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">
-						<div style="font-size: 16px;">产品名称</div>
-						<div style="color: rgb(102,198,232);height: 40px;">产品特色</div>
-						<div>
-							<div style="float:left;color:red;font-size: 16px;">￥ 39.90</div>
-							<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>
-							<div style="clear:both;"></div>
-						</div>
-					</div>
-				</div>
-				<div style="clear:both;"></div>
-				<div style="height:30px;"></div>
-				<div style="float:left;text-align:center;width:33.3%">
-					<div class="main_image"></div>
-					<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">
-						<div style="font-size: 16px;">产品名称</div>
-						<div style="color: rgb(102,198,232);height: 40px;">产品特色</div>
-						<div>
-							<div style="float:left;color:red;font-size: 16px;">￥ 39.90</div>
-							<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>
-							<div style="clear:both;"></div>
-						</div>
-					</div>
-				</div>
-				<div style="float:left;text-align:center;width:33.3%">
-					<div class="main_image"></div>
-					<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">
-						<div style="font-size: 16px;">产品名称</div>
-						<div style="color: rgb(102,198,232);height: 40px;">产品特色</div>
-						<div>
-							<div style="float:left;color:red;font-size: 16px;">￥ 39.90</div>
-							<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>
-							<div style="clear:both;"></div>
-						</div>
-					</div>
-				</div>
-				<div style="float:left;text-align:center;width:33.3%">
-					<div class="main_image"></div>
-					<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">
-						<div style="font-size: 16px;">产品名称</div>
-						<div style="color: rgb(102,198,232);height: 40px;">产品特色</div>
-						<div>
-							<div style="float:left;color:red;font-size: 16px;">￥ 39.90</div>
-							<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>
-							<div style="clear:both;"></div>
-						</div>
-					</div>
-				</div>
-				<div style="clear:both;"></div>
-
+				<div id="p1"></div>
 			</div>
 			<!--最新消息区-->
 			<div class="w960">
@@ -143,6 +68,7 @@
 		<!--footer-->
 		<div id="footer" class="bgfooter"></div>
 		<script type="text/javascript">
+			/*加载新闻*/
 			$.ajax({
 				type: "post",
 				url: "/news/getTop",
@@ -157,6 +83,38 @@
 						h = h + '</li>';	 
 					}
 					$("#nlist").html(h);
+				}
+			});
+			/*加载产品*/
+			$.ajax({
+				type: "post",
+				url: "/product/getTop",
+				success: function(data) {
+					var h = '';
+					var pno = 0;
+					for(var i in data){
+						pno = pno + 1;
+						h += '<div style="float:left;text-align:center;width:33.3%">';
+						h += '<img class="main_image" src="/upload/'+data[i].imgname+'"></img>';
+						h += '<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">';
+						h += '<div style="font-size: 16px;">'+data[i].name+'</div>';
+						h += '<div style="color: rgb(102,198,232);height: 40px;">'+data[i].feature+'</div>';
+						h += '<div>';
+						h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
+						h += '<div style="float:right"><img onclick="openDetail('+data[i].id+')" style="cursor:pointer;height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
+						h += '<div style="clear:both;"></div>';
+						h += '</div>';
+						h += '</div>';
+						h += '</div>';
+						if(pno == 3){
+							h += '<div style="clear:both;"></div><div style="height:30px;"></div>';
+						}else if(pno == 6){
+							h += '<div style="clear:both;"></div>';
+						}
+						
+					}
+					h += '<div style="clear:both;"></div>';
+					$("#p1").html(h);
 				}
 			});
 		</script>

@@ -1,0 +1,140 @@
+<% include header %>
+<div class="am-cf am-padding">
+	<div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">产品信息表</strong> / <small>表单</small></div>
+</div>
+<div class="am-form bg-form">
+
+	<table class="am-table am-table-bordered" style="width:100%;margin: 10px;">
+		<tr>
+			<td>产品名称</td>
+			<td><input type="text" id="name"></td>
+		</tr>
+		<tr>
+			<td>品牌</td>
+			<td><input type="text" id="pinpai"></td>
+		</tr>
+		<tr>
+			<td>产地</td>
+			<td><input type="text" id="chandi"></td>
+		</tr>
+		<tr>
+			<td>数量</td>
+			<td><input type="text" id="shuliang"></td>
+		</tr>
+		<tr>
+			<td>编号</td>
+			<td><input type="text" id="bianhao"></td>
+		</tr>
+		<tr>
+			<td>包装</td>
+			<td><input type="text" id="baozhuang"></td>
+		</tr>
+		<tr>
+			<td>净含量</td>
+			<td><input type="text" id="jihanliang"></td>
+		</tr>
+		<tr>
+			<td>保质期</td>
+			<td><input type="text" id="baozhiqi"></td>
+		</tr>
+		<tr>
+			<td>尺寸</td>
+			<td><input type="text" id="chicun"></td>
+		</tr>
+		<tr>
+			<td>储存方式</td>
+			<td><input type="text" id="cuchunfangshi"></td>
+		</tr>
+		<tr>
+			<td>库存</td>
+			<td><input type="text" id="numStock" value="0"></td>
+		</tr>
+		<tr>
+			<td>销量</td>
+			<td><input type="text" id="numSales" readonly value="0"></td>
+		</tr>
+		<tr>
+			<td>重量</td>
+			<td><input type="text" id="weight"></td>
+		</tr>
+		<tr>
+			<td>价格</td>
+			<td><input type="text" id="price" value="0"></td>
+		</tr>
+		<tr>
+			<td>图片</td>
+			<td>
+				<iframe frameborder=0 src="/_upload" style="width:550px;height:60px"></iframe>
+			</td>
+		</tr>
+		<tr>
+			<td>产品介绍</td>
+			<td><textarea id="post" name="post"></textarea></td>
+		</tr>
+		<tr>
+			<td>类别</td>
+			<td>
+				<input type="text" list="gyslist" id="type">
+				<datalist id="gyslist">
+					<option value="饮料">饮料</option>
+					<option value="甜品">甜品</option>
+					<option value="零食">零食</option>
+					<option value="冰淇淋">冰淇淋</option>
+				</datalist>
+			</td>
+		</tr>
+		<tr>
+			<td>产品特色</td>
+			<td><input type="text" id="feature"></td>
+		</tr>
+	</table>
+
+</div>
+
+<div class="am-margin">
+	<button type="button" onclick="saveForm('product')" class="btn-c am-btn am-btn-primary am-btn-xs">保存</button>
+	<button type="button" onclick="history.go('-1');" class="btn-c am-btn am-btn-primary am-btn-xs">关闭</button>
+</div>
+<script>
+	var editor;
+	var options = {
+		uploadJson: '/uploadImg',
+		height: 500
+	};
+	KindEditor.ready(function(k) {
+		editor = k.create('#post', options);
+		var mode = window.sessionStorage.getItem('mode');
+		if (mode == "edit") {
+			var editid = window.sessionStorage.getItem("editid");
+			$.ajax({
+				type: "post",
+				url: "product/getById",
+				data: {
+					id: editid
+				},
+				success: function(data) {
+
+					$('#name').val(data[0].name);
+					$('#pinpai').val(data[0].pinpai);
+					$('#chandi').val(data[0].chandi);
+					$('#shuliang').val(data[0].shuliang);
+					$('#bianhao').val(data[0].bianhao);
+					$('#baozhuang').val(data[0].baozhuang);
+					$('#jihanliang').val(data[0].jihanliang);
+					$('#baozhiqi').val(data[0].baozhiqi);
+					$('#chicun').val(data[0].chicun);
+					$('#cuchunfangshi').val(data[0].cuchunfangshi);
+					$('#numStock').val(data[0].numStock);
+					$('#numSales').val(data[0].numSales);
+					$('#weight').val(data[0].weight);
+					$('#price').val(data[0].price);
+					$('#type').val(data[0].type);
+					$('#feature').val(data[0].feature);
+					
+					editor.html(data[0].post);
+				}
+			});
+		}
+	});
+</script>
+<% include footer %>

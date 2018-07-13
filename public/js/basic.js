@@ -96,10 +96,10 @@ function delDoc(i) {
 			}
 		});
 	}else if (i == 1) {
-		//公告
+		//产品
 		$.ajax({
 			type: "post",
-			url: "notice/del",
+			url: "/product/del",
 			data: {
 				id: window.sessionStorage.getItem("delid")
 			},
@@ -213,10 +213,10 @@ function editDoc(i, id) {
 		window.sessionStorage.setItem("mode", "edit");
 		window.location = '/news';
 	}else if (i == 1) {
-		//公告
+		//产品
 		window.sessionStorage.setItem("editid", id);
 		window.sessionStorage.setItem("mode", "edit");
-		window.location = '/notice';
+		window.location = '/product';
 	}else if (i == 2) {
 		//游记
 		window.location = "/travel?id="+id;
@@ -297,7 +297,7 @@ function toPage(i, page) {
 	} else if (i == 1) {
 		$.ajax({
 			type: "post",
-			url: "/notice/get",
+			url: "/product/get",
 			data: {
 				indexPage: indexPage
 			},
@@ -307,8 +307,11 @@ function toPage(i, page) {
 				var record = data.record;
 				for (var i in record) {
 					html += "<tr>";
-					html += "<td>" + record[i].title + "</td>";
-					html += "<td>" + record[i].publishAt + "</td>";
+					html += "<td>" + record[i].name + "</td>";
+					html += "<td>" + record[i].bianhao + "</td>";
+					html += "<td>" + record[i].price + "</td>";
+					html += "<td>" + record[i].numStock + "</td>";
+					html += "<td>" + record[i].numSales + "</td>";
 					html += "<td><button type='button' onclick='editDoc(1," + record[i].id + ")' class='am-btn am-btn-default am-btn-xs am-text-secondary'><span class='am-icon-pencil-square-o'></span> 编辑</button>";
 					html += "<button type='button' onclick='showDelCofirm(" + record[i].id + ")' class='am-btn am-btn-default am-btn-xs am-text-danger'><span class='am-icon-trash-o'></span> 删除</button></td>";
 					html += "</tr>";
@@ -661,6 +664,10 @@ function loadNews() {
 	toPage(0, 1);
 }
 
+function loadProducts() {
+	toPage(1, 1);
+}
+
 function saveForm(table) {
 	var mode = window.sessionStorage.getItem('mode');
 	if (table == 'news') {
@@ -695,7 +702,63 @@ function saveForm(table) {
 				}
 			}
 		});
-	} else if (table == 'notice') {
+	}else if (table == 'product') {
+		var name = $('#name').val();
+		var pinpai = $('#pinpai').val();
+		var chandi = $('#chandi').val();
+		var shuliang = $('#shuliang').val();
+		var bianhao = $('#bianhao').val();
+		var baozhuang = $('#baozhuang').val();
+		var jihanliang = $('#jihanliang').val();
+		var baozhiqi = $('#baozhiqi').val();
+		var chicun = $('#chicun').val();
+		var cuchunfangshi = $('#cuchunfangshi').val();
+		var numStock = $('#numStock').val();
+		var numSales = $('#numSales').val();
+		var weight = $('#weight').val();
+		var price = $('#price').val();
+		var type = $('#type').val();
+		var feature = $('#feature').val();
+
+
+		html = editor.html();
+		editor.sync();
+
+		var post = $('#post').val();
+		//var summary = $('#summary').val();
+
+		$.ajax({
+			type: "post",
+			url: "/product/create",
+			data: {
+				mode: mode,
+				name: name,
+				pinpai: pinpai,
+				chandi: chandi,
+				shuliang: shuliang,
+				bianhao: bianhao,
+				baozhuang: baozhuang,
+				jihanliang: jihanliang,
+				baozhiqi: baozhiqi,
+				chicun: chicun,
+				cuchunfangshi: cuchunfangshi,
+				numStock: numStock,
+				numSales: numSales,
+				weight: weight,
+				price: price,
+				type: type,
+				post: post,
+				feature: feature,
+				editid: window.sessionStorage.getItem("editid")
+			},
+			success: function(data) {
+				if (data == "300") {
+					alert("保存成功！");
+					window.location = 'erp/view_product';
+				}
+			}
+		});
+	}else if (table == 'notice') {
 		var title = $('#title').val();
 
 		//html = editor.html();

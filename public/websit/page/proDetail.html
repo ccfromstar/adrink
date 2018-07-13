@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>爱饮(上海)</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		
+		<link rel="stylesheet" href="../framework/amazeui/amazeui.min.css" />
+
+		<script src="../framework/jquery-1.9.1.js"></script>
+		<script src="../framework/amazeui/amazeui.min.js"></script>
+		<script src="../framework/main.js"></script>
+		
+		<link rel="stylesheet" href="../framework/css/admin.css">
+
+		<style>
+			.none{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!--header-->
+		<div id="header" class="bgheader"></div>
+		<!--菜单-->
+		<div id="menu" class="bgmenu"></div>
+		<!--主页内容-->
+		<div class="bgmain" >
+			<div class="w960">
+				<br/>
+				<div class="menu">首页 > 在线商城 > 商品详情</div>
+				<div style="float:left">
+					<ul class="typelist">
+						<li class="active" onclick="loadP(0)">饮料系列</li>
+						<li onclick="loadP(1)">零食系列</li>
+						<li onclick="loadP(2)">甜品系列</li>
+						<li onclick="loadP(3)">冰淇凌系列</li>
+					</ul>
+				</div>
+				<div style="float:right">
+					
+				</div>
+				<div style="clear: both;"></div>
+				<div style="border-top:3px solid rgb(206,206,206);width:99%;height: 1px;margin-left:5px;margin-top: -3px;"></div>
+				<div style="float:left">
+					
+				</div>
+				<div style="float:right">
+					
+				</div>
+			</div>
+		</div>
+		<!--footer-->
+		<div id="footer" class="bgfooter"></div>
+		<script type="text/javascript">
+			function loadP(i){
+				window.location = 'mall.html';
+			}
+
+			var url=window.location.href;
+			var arr1 = url.split("?id=");
+			/*加载产品信息*/
+			$.ajax({
+				type: "post",
+				url: "/product/getById",
+				data: {
+					id:arr1[1]
+			    },
+				success: function(data) {
+					var h = '';
+					
+					$("#nlist").html(h);
+				}
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>爱饮(上海)</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		
+		<link rel="stylesheet" href="../framework/amazeui/amazeui.min.css" />
+
+		<script src="../framework/jquery-1.9.1.js"></script>
+		<script src="../framework/amazeui/amazeui.min.js"></script>
+		<script src="../framework/main.js"></script>
+		
+		<link rel="stylesheet" href="../framework/css/admin.css">
+
+		<style>
+			.none{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!--header-->
+		<div id="header" class="bgheader"></div>
+		<!--菜单-->
+		<div id="menu" class="bgmenu"></div>
+		<!--主页内容-->
+		<div class="bgmain" >
+			<!--翻页广告区-->
+			<div class="w960">
+				<img style="margin-top:30px;margin-left:7px;width:946px;" src="../framework/adv1.png">
+			</div>
+			<!--产品列表区-->
+			<div class="w960">
+				<div style="float:left">
+					<ul class="typelist">
+						<li class="active" onclick="loadP(0)">饮料系列</li>
+						<li onclick="loadP(1)">零食系列</li>
+						<li onclick="loadP(2)">甜品系列</li>
+						<li onclick="loadP(3)">冰淇凌系列</li>
+					</ul>
+				</div>
+				<div style="float:right">
+					<select style="margin-top:38px;margin-right: 5px;" id="orderby" onchange="setBy()">
+						<option value="0">上架日期升序</option>
+						<option value="1">上架日期降序</option>
+						<option value="2">销量升序</option>
+						<option value="3">销量降序</option>
+						<option value="4">价格升序</option>
+						<option value="5">价格降序</option>
+					</select>
+				</div>
+				<div style="clear: both;"></div>
+				<div style="border-top:3px solid rgb(206,206,206);width:99%;height: 1px;margin-left:5px;margin-top: -3px;"></div>
+				<div id="p1" style="margin-top:5px;margin-bottom: 30px;"></div>
+			</div>
+		</div>
+		<!--footer-->
+		<div id="footer" class="bgfooter"></div>
+		<script type="text/javascript">
+			function setBy(){
+				var o1 = "";
+				var o2 = "";
+				var s = Number($("#orderby").val());
+				if(s == 0){
+					o1 = "updateAt";o2 = "asc";
+				}else if(s == 1){
+					o1 = "updateAt";o2 = "desc";
+				}else if(s == 2){
+					o1 = "numSales";o2 = "asc";
+				}else if(s == 3){
+					o1 = "numSales";o2 = "desc";
+				}else if(s == 4){
+					o1 = "price";o2 = "asc";
+				}else if(s == 5){
+					o1 = "price";o2 = "desc";
+				}
+				loadP(window.sessionStorage.plist,o1,o2);
+			}
+
+			function loadP(i,o1,o2){
+				if(!o1){
+					o1 = "updateAt";o2 = "asc";
+				}
+				window.sessionStorage.plist = i;
+				$('.typelist li').removeClass('active');
+				$('.typelist li:eq('+i+')').addClass('active');
+				var type = '';
+				if(i==0){
+					type = '饮料';
+				}else if(i==1){
+					type = '零食';
+				}else if(i==2){
+					type = '甜品';
+				}else if(i==3){
+					type = '冰淇凌';
+				}
+				if(sessionStorage.pname && sessionStorage.pname !=''){
+					$.ajax({
+						type: "post",
+						url: "/product/getList1",
+						data: {
+							pname:sessionStorage.pname
+						},
+						success: function(data) {
+							var h = '';
+							var pno = 0;
+							for(var i in data){
+								pno = pno + 1;
+								h += '<div style="float:left;text-align:center;width:33.3%">';
+								h += '<img class="main_image" src="/upload/'+data[i].imgname+'"></img>';
+								h += '<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">';
+								h += '<div style="font-size: 16px;">'+data[i].name+'</div>';
+								h += '<div style="color: rgb(102,198,232);height: 40px;">'+data[i].feature+'</div>';
+								h += '<div>';
+								h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
+								h += '<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
+								h += '<div style="clear:both;"></div>';
+								h += '</div>';
+								h += '</div>';
+								h += '</div>';
+								if(pno == 3 || pno == 6 || pno == 9 ){
+									h += '<div style="clear:both;"></div><div style="height:30px;"></div>';
+								}
+							}
+							h += '<div style="clear:both;"></div>';
+							$("#p1").html(h);
+						}
+					});
+				}else{
+					/*加载产品*/
+					$.ajax({
+						type: "post",
+						url: "/product/getList",
+						data: {
+							type:type,
+							o1:o1,
+							o2:o2
+						},
+						success: function(data) {
+							var h = '';
+							var pno = 0;
+							for(var i in data){
+								pno = pno + 1;
+								h += '<div style="float:left;text-align:center;width:33.3%">';
+								h += '<img class="main_image" src="/upload/'+data[i].imgname+'"></img>';
+								h += '<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">';
+								h += '<div style="font-size: 16px;">'+data[i].name+'</div>';
+								h += '<div style="color: rgb(102,198,232);height: 40px;">'+data[i].feature+'</div>';
+								h += '<div>';
+								h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
+								h += '<div style="float:right"><img onclick="openDetail('+data[i].id+')" style="cursor:pointer;height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
+								h += '<div style="clear:both;"></div>';
+								h += '</div>';
+								h += '</div>';
+								h += '</div>';
+								if(pno == 3 || pno == 6 || pno == 9 ){
+									h += '<div style="clear:both;"></div><div style="height:30px;"></div>';
+								}
+							}
+							h += '<div style="clear:both;"></div>';
+							$("#p1").html(h);
+						}
+					});
+				}
+			}
+
+			loadP(0);
+			sessionStorage.pname = '';
+		</script>
+	</body>
+</html>

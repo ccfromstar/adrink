@@ -22,8 +22,56 @@ exports.getopenid = function(req, res) {
 	
 }
 
+function getUrl(req) {
+	return req.url;
+}
+
+exports._upload = function(req, res) {
+	res.render('_upload',{layout:false});
+};
+
+exports._uploadsuccess = function(req, res) {
+	var p = req.query.p;
+	res.render('_uploadsuccess', {
+		layout:false,
+		url: getUrl(req),
+		p: p
+	});
+};
+
+exports._uploaddo = function(req, res) {
+	console.log(req.files);
+	var img_url = req.files.img_url;
+	var namelist = "";
+	if(img_url.path){
+		namelist = img_url.path.replace("public\\upload\\", "").replace("public/upload/", "");
+	}else{
+		for(var i in img_url){
+			var x = img_url[i].path.replace("public\\upload\\", "").replace("public/upload/", "");
+			namelist = (namelist == ""?(x):(namelist+";"+x));
+		}
+	}
+	
+	var bianhao = req.body.bianhao;
+	var arr1 = namelist.split(";");
+
+	for(var i=0;i<arr1.length;i++){
+		var sql = "insert into input_files(name,bianhao) values('"+arr1[i]+"','"+bianhao+"')";
+		console.log(sql);
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+		});
+	}
+	
+	res.redirect("_uploadsuccess?p=" + namelist);
+};
+
 exports.news = function(req, res) {
 	res.render('erp/news', {});
+}
+
+exports.product = function(req, res) {
+	res.render('erp/product', {});
 }
 
 exports.newsdo = function(req, res) {
@@ -158,6 +206,196 @@ exports.newsdo = function(req, res) {
 	}
 }
 
+exports.productdo = function(req, res) {
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	var sql = req.params.sql;
+	if(sql == "create") {
+		var mode = req.param("mode");
+
+		var name = req.param("name");
+		var pinpai = req.param("pinpai");
+		var chandi = req.param("chandi");
+		var shuliang = req.param("shuliang");
+		var bianhao = req.param("bianhao");
+		var baozhuang = req.param("baozhuang");
+		var jihanliang = req.param("jihanliang");
+		var baozhiqi = req.param("baozhiqi");
+		var chicun = req.param("chicun");
+		var cuchunfangshi = req.param("cuchunfangshi");
+		var numStock = req.param("numStock");
+		var numSales = req.param("numSales");
+		var weight = req.param("weight");
+		var price = req.param("price");
+		var type = req.param("type");
+		var feature = req.param("feature");
+
+		var post = req.param("post");
+		
+		var editid = req.param("editid");
+		/*对单引号进行转义*/
+		//title = title.replace(/'/g, "\\'");
+		post = post.replace(/'/g, "\\'");
+		/*编辑模式*/
+		if(mode == "edit") {
+			var sql = "update product set ";
+			sql += " name = '" + name + "',";
+			sql += " pinpai = '" + pinpai + "',";
+			sql += " chandi = '" + chandi + "',";
+			sql += " shuliang = '" + shuliang + "',";
+			sql += " bianhao = '" + bianhao + "',";
+			sql += " baozhuang = '" + baozhuang + "',";
+			sql += " jihanliang = '" + jihanliang + "',";
+			sql += " baozhiqi = '" + baozhiqi + "',";
+			sql += " chicun = '" + chicun + "',";
+			sql += " cuchunfangshi = '" + cuchunfangshi + "',";
+			sql += " numStock = '" + numStock + "',";
+			sql += " numSales = '" + numSales + "',";
+			sql += " weight = '" + weight + "',";
+			sql += " price = '" + price + "',";
+			sql += " type = '" + type + "',";
+			sql += " feature = '" + feature + "',";
+			sql += " updateAt = now(),";
+			sql += " post = '" + post + "'";
+			sql += " where id = " + editid;
+			mysql.query(sql, function(err, result) {
+				if(err) return console.error(err.stack);
+				if(result.affectedRows == 1) {
+					res.send("300");
+				}
+			});
+		} else {
+			var sql = "insert into product (name,pinpai,chandi,shuliang,bianhao,baozhuang,jihanliang,baozhiqi,chicun,cuchunfangshi,numStock,numSales,weight,price,type,post,updateAt,feature) ";
+			sql += "values ('"+name+"','"+pinpai+"','"+chandi+"','"+shuliang+"','"+bianhao+"','"+baozhuang+"','"+jihanliang+"','"+baozhiqi+"','"+chicun+"','"+cuchunfangshi+"','"+numStock+"','"+numSales+"','"+weight+"','"+price+"','"+type+"','"+post+"',now(),'"+feature+"')";
+			mysql.query(sql, function(err, result) {
+				if(err) return console.error(err.stack);
+				if(result.affectedRows == 1) {
+					res.send("300");
+				}
+			});
+		}
+	} else if(sql == "get") {
+		var page = parseInt(req.param("indexPage"));
+		var LIMIT = 10;
+		page = (page && page > 0) ? page : 1;
+		var limit = (limit && limit > 0) ? limit : LIMIT;
+
+		var change = "";
+
+		var sql1 = "select * from product where 1=1 " + change + " order by id desc limit " + (page - 1) * limit + "," + limit;
+		var sql2 = "select count(*) as count from product where 1=1 " + change;
+		debug(sql1);
+		async.waterfall([function(callback) {
+			mysql.query(sql1, function(err, result) {
+				if(err) return console.error(err.stack);
+				for(var i in result) {
+					//result[i].publishAt = (result[i].publishAt).Format("yyyy-MM-dd hh:mm:ss");
+				}
+				callback(null, result);
+			});
+		}, function(result, callback) {
+			mysql.query(sql2, function(err, rows) {
+				if(err) return console.error(err.stack);
+				callback(err, rows, result);
+			});
+		}], function(err, rows, result) {
+			if(err) {
+				console.log(err);
+			} else {
+
+				var total = rows[0].count;
+				var totalpage = Math.ceil(total / limit);
+				var isFirstPage = page == 1;
+				var isLastPage = ((page - 1) * limit + result.length) == total;
+
+				var ret = {
+					total: total,
+					totalpage: totalpage,
+					isFirstPage: isFirstPage,
+					isLastPage: isLastPage,
+					record: result
+				};
+				res.json(ret);
+			}
+		});
+	} else if(sql == "del") {
+		var id = req.param("id");
+		var sql = "delete from product where id = " + id;
+		console.log(sql);
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			if(result.affectedRows == 1) {
+				res.send("300");
+			}
+		});
+	} else if(sql == "getById") {
+		var id = req.param("id");
+		var sql = "select * from product where id = " + id;
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			res.json(result);
+		});
+	} else if(sql == "getTop") {
+		var sql = "select * from v_product group by bianhao order by updateAt desc limit 6";
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			for(var i in result){
+				result[i].updateAt = (result[i].updateAt).Format("yyyy-MM-dd hh:mm:ss");
+			}
+			res.json(result);
+		});
+	} else if(sql == "getList") {
+		var type = req.param("type");
+		var o1 = req.param("o1");
+		var o2 = req.param("o2");
+		var sql = "select * from v_product where type like '%"+type+"%' group by bianhao order by "+o1+" "+o2;
+		console.log(sql);
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			for(var i in result){
+				result[i].updateAt = (result[i].updateAt).Format("yyyy-MM-dd hh:mm:ss");
+			}
+			res.json(result);
+		});
+	} else if(sql == "getList1") {
+		var pname = req.param("pname");
+		var sql = "select * from v_product where name like '%"+pname+"%'  group by bianhao";
+		console.log(sql);
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			for(var i in result){
+				result[i].updateAt = (result[i].updateAt).Format("yyyy-MM-dd hh:mm:ss");
+			}
+			res.json(result);
+		});
+	} else if(sql == "getNews") {
+		var sql = "select * from news order by publishAt desc";
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			for(var i in result){
+				result[i].publishAt = (result[i].publishAt).Format("yyyy-MM-dd hh:mm:ss");
+			}
+			res.json(result);
+		});
+	} else if(sql == "getByIdAndNext") {
+		var id = req.param("id");
+		var sql = "select * from news where id = " + id;
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			var sql1 = "select * from news where id = (select max(id) from news where id < " + id + ")";
+			mysql.query(sql1, function(err1, result1) {
+				if(err1) return console.error(err1.stack);
+				var sql2 = "select * from news where id = (select min(id) from news where id > " + id + ")";
+				mysql.query(sql2, function(err2, result2) {
+					if(err2) return console.error(err2.stack);
+					result[0].front = result1;
+					result[0].next = result2;
+					res.json(result);
+				});
+			});
+		});
+	}
+}
+
 
 exports.index = function(req, res) {
 	res.render('front/index', {});
@@ -169,6 +407,10 @@ exports.erp_home = function(req, res) {
 
 exports.erp_view_news = function(req, res) {
 	res.render('erp/view_news', {});
+};
+
+exports.erp_view_product = function(req, res) {
+	res.render('erp/view_product', {});
 };
 
 exports.erp_role = function(req, res) {
