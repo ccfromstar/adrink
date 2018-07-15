@@ -1,6 +1,6 @@
 module.exports = function (app, routes) {
 	//front
-    app.get('/',routes.checkuserLogin);
+    //app.get('/',routes.checkuserLogin);
     app.get('/',routes.index);
 
     /*
@@ -40,4 +40,5 @@ module.exports = function (app, routes) {
     app.get('/_upload',routes._upload);
     app.get('/_uploadsuccess',routes._uploadsuccess);
     app.post('/_uploaddo',routes._uploaddo);
+    app.post('/uploadImg',routes.uploadImg);
 };

@@ -206,6 +206,15 @@ exports.newsdo = function(req, res) {
 	}
 }
 
+exports.uploadImg = function(req, res) {
+	var fname = req.files.imgFile.path.replace("public\\upload\\", "").replace("public/upload/", "");
+	var info = {
+		"error": 0,
+		"url": "/upload/" + fname
+	};
+	res.send(info);
+}
+
 exports.productdo = function(req, res) {
 	res.setHeader("Access-Control-Allow-Origin", "*");
 	var sql = req.params.sql;
@@ -332,9 +341,24 @@ exports.productdo = function(req, res) {
 		var sql = "select * from product where id = " + id;
 		mysql.query(sql, function(err, result) {
 			if(err) return console.error(err.stack);
+			/*获取图片*/
+			var sql1 = "select * from input_files where bianhao ='"+result[0].bianhao+"'";
+			mysql.query(sql1, function(err, result1) {
+				if(err) return console.error(err.stack);
+				res.json({
+					result:result,
+					result1:result1
+				});
+			});
+		});
+	} else if(sql == "getById1") {
+		var id = req.param("id");
+		var sql = "select * from product where id = " + id;
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
 			res.json(result);
 		});
-	} else if(sql == "getTop") {
+	}else if(sql == "getTop") {
 		var sql = "select * from v_product group by bianhao order by updateAt desc limit 6";
 		mysql.query(sql, function(err, result) {
 			if(err) return console.error(err.stack);
@@ -398,7 +422,7 @@ exports.productdo = function(req, res) {
 
 
 exports.index = function(req, res) {
-	res.render('front/index', {});
+	res.redirect("websit/page/index.html");
 };
 
 exports.erp_home = function(req, res) {
@@ -462,11 +486,38 @@ exports.servicedo = function(req, res) {
 				res.send("400");
 			}
 		});
-	}  else if(_sql == "getRole") {
+	} else if(_sql == "getRole") {
 		var sql = "select * from c_role";
 		mysql.query(sql, function(err, result) {
 			if(err) return console.error(err.stack);
 			res.send(result);
+		});
+	} else if(_sql == "getCartNum") {
+		var sessionID = req.param("sessionID");
+		var sql = "select sum(num) as count from cart where userid = '"+sessionID+"'";
+		console.log(sql);
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			console.log(result);
+			res.send(result);
+		});
+	} else if(_sql == "getCart") {
+		var sessionID = req.param("sessionID");
+		var sql = "select * from v_cart where userid = '"+sessionID+"'";
+		console.log(sql);
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			console.log(result);
+			res.send(result);
+		});
+	} else if(_sql == "addCart") {
+		var num1 = req.param("num1");
+		var proid = req.param("proid");
+		var sessionID = req.param("sessionID");
+		var sql = "insert into cart(userid,proID,num) values('"+sessionID+"','"+proid+"','"+num1+"')";
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			res.send("200");
 		});
 	} else if(_sql == "insertRole") {
 		var username = req.param("username");

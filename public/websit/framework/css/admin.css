@@ -59,6 +59,9 @@ dl{
   background-image: url('../bg1.png');
   
 }
+.bgmain2{
+  background-color: rgb(245,244,249)
+}
 .ci-count{position:absolute;top:1px;left:45px;right:auto;display:inline-block;padding:2px;font-size:12px;line-height:12px;color:#fff;background-color:#f10215;-moz-border-radius:7px;border-radius:7px;min-width:12px;text-align:center}
 .cw-icon{
   display: inline-block;
@@ -109,7 +112,7 @@ dl{
 .typelist li{
   float: left;
   list-style:none;
-  width:80px;
+  width:90px;
   font-size:14px;
   display: inline-block;
   border-radius: 3px;
@@ -122,4 +125,7 @@ dl{
 
 .typelist .active{
   color:red;
+}
+#post1 img{
+  width: 960px !important;
 }

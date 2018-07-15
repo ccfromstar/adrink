@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>爱饮(上海)</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		
+		<link rel="stylesheet" href="../framework/amazeui/amazeui.min.css" />
+
+		<script src="../framework/jquery-1.9.1.js"></script>
+		<script src="../framework/amazeui/amazeui.min.js"></script>
+		<script src="../framework/main.js"></script>
+		
+		<link rel="stylesheet" href="../framework/css/admin.css">
+
+		<style>
+			.none{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!--header-->
+		<div id="header" class="bgheader"></div>
+		<!--菜单-->
+		<div id="menu" class="bgmenu"></div>
+		<!--主页内容-->
+		<div class="bgmain2" >
+			<div class="w960">
+				<br/>
+				<div class="menu">首页 > 个人中心 > 购物车</div>
+				<div style="background-color: white;width:100%;margin-top : 20px">
+					<div style="float:left;margin:25px;color:red;font-weight: bold;font-size: 16px;">
+						全部商品<span id="numTotal"></span>
+					</div>
+					<div style="float:right;margin:15px;">
+						已选商品（不含运费）<span id="numPTotal"></span><div style="display:inline-block;background-color: rgb(231,59,59);color:white;width:100px;text-align: center;margin-top: 5px;margin-left:10px;border-radius: 5px;padding: 5px;cursor: pointer;" onclick="gotoCart()">结算</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+				<table style="width:960px;margin:10px;">
+					<thead>
+						<tr>
+							<td style="margin-bottom: 10px;"><input type="checkbox" name=""></td>
+							<td>全选</td>
+							<td>商品信息</td>
+							<td>单价</td>
+							<td>数量</td>
+							<td>金额</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody id="cartBody"></tbody>
+				</table>
+			</div>
+		</div>
+		<!--footer-->
+		<div id="footer" class="bgfooter"></div>
+		<script type="text/javascript">
+			
+			$(function(){
+				$.ajax({
+					type: "post",
+					url: "/service/getCart",
+					data: {
+						sessionID:window.sessionStorage.sessionID
+					},
+					success: function(data) {
+						var h = "";
+						for(var i in data){
+							h = h + "<tr>";
+							h = h + "<td><input type='checkbox' name=''></td>";
+							h = h + "<td></td>";
+							h = h + "<td>"+data[i].name+"</td>";
+							h = h + "<td></td>";
+							h = h + "<td></td>";
+							h = h + "<td></td>";
+							h = h + "<td></td>";
+							h = h + "</tr>";
+						}	
+						$("#cartBody").html(h);
+					}
+				});
+			});
+
+		
+		</script>
+	</body>
+</html>

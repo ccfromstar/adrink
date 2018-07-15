@@ -29,7 +29,7 @@
 		<!--菜单-->
 		<div id="menu" class="bgmenu"></div>
 		<!--主页内容-->
-		<div class="bgmain" >
+		<div class="bgmain2" >
 			<div class="w960">
 				<br/>
 				<div class="menu">首页 > 在线商城 > 商品详情</div>
@@ -46,36 +46,141 @@
 				</div>
 				<div style="clear: both;"></div>
 				<div style="border-top:3px solid rgb(206,206,206);width:99%;height: 1px;margin-left:5px;margin-top: -3px;"></div>
-				<div style="float:left">
-					
-				</div>
-				<div style="float:right">
-					
+				<div style="background-color: white">
+					<div style="float:left">
+						<img id="pimg" src="" style="width:400px;height: 300px;margin:10px;">
+						<div id="imglist" style="margin-left:10px"></div>
+					</div>
+					<div style="float:left;margin-left: 30px;">
+						<div id="pname1" style="font-weight: bold;font-size: 20px;margin-top: 30px"></div>
+						<div id="pf1" style="color:red;font-size: 16px;"></div>
+						<div style="width: 500px;background-color: rgb(239,239,239);padding: 10px;margin-top: 10px;">价格<span id="p3" style="margin-left: 30px;font-size: 20px;font-weight: bold;color: red"></span></div>
+						<div style="padding: 10px;margin-top: 5px;">运费<span id="p4" style="margin-left: 30px;"></span></div>
+						<div style="padding: 10px;margin-top: 5px;">重量<span id="p5" style="margin-left: 30px;"></span></div>
+						<div style="padding: 10px;margin-top: 5px;">销量<span id="p6" style="margin-left: 30px;color:red;font-weight: bold;"></span></div>
+						<div style="padding: 10px;margin-top: 5px;">数量<input id="num1" value="0" style="width:30px;margin-left: 30px" />&nbsp;件&nbsp;&nbsp;&nbsp;库存<span id="p7"></span>件</div>
+						<div style="background-color: rgb(231,59,59);color:white;width:100px;text-align: center;margin-top: 5px;margin-left:10px;border-radius: 5px;padding: 5px;cursor: pointer;" onclick="gotoCart()">加入购物车</div>
+					</div>
+					<div style="clear: both;"></div>
+					<div style="border-top:1px solid rgb(156,92,92);margin-top: 30px;border-bottom:1px solid rgb(179,179,179);">
+						<div style="color:red;display: inline-block;padding: 10px 30px;border-right: 1px solid rgb(179,179,179);">商品参数</div>
+						<div style="display: inline-block;padding: 10px 30px;border-right: 1px solid rgb(179,179,179);">商品详情</div>
+					</div>
+					<div style="float:left;margin:30px;">
+						<div>品牌</div>
+						<div>商品名称</div>
+						<div>商品编号</div>
+						<div>净含量</div>
+						<div>商品尺寸</div>
+					</div>
+					<div style="float:left;margin:30px;">
+						<div id="sx1"></div>
+						<div id="sx2"></div>
+						<div id="sx3"></div>
+						<div id="sx4"></div>
+						<div id="sx5"></div>
+					</div>
+					<div style="float:left;margin:30px;margin-left: 150px;">
+						<div>产品</div>
+						<div>数量</div>
+						<div>包装</div>
+						<div>保质期限</div>
+						<div>储存方式</div>
+					</div>
+					<div style="float:left;margin:30px;">
+						<div id="sx6"></div>
+						<div id="sx7"></div>
+						<div id="sx8"></div>
+						<div id="sx9"></div>
+						<div id="sx10"></div>
+					</div>
+					<div style="clear: both;"></div>
+					<div id="post1"></div>
 				</div>
 			</div>
 		</div>
 		<!--footer-->
 		<div id="footer" class="bgfooter"></div>
 		<script type="text/javascript">
+			var d = '';
+			var proid = '';
+			$(function(){
+				var url=window.location.href;
+				var arr1 = url.split("?id=");
+				proid = arr1[1]
+				/*加载产品信息*/
+				$.ajax({
+					type: "post",
+					url: "/product/getById",
+					data: {
+						id:arr1[1]
+				    },
+					success: function(data) {
+						console.log(data);
+						d = data;
+						$("#pname1").html(data.result[0].name);
+						$("#pf1").html(data.result[0].feature);
+						$("#p3").html('¥'+data.result[0].price);
+						$("#p4").html('满100包邮，不满100的15元运费');
+						$("#p5").html(data.result[0].weight);
+						$("#p6").html(data.result[0].numSales);
+						$("#p7").html(data.result[0].numStock);
+						$("#post1").html(data.result[0].post);
+
+						$("#sx1").html(data.result[0].pinpai);
+						$("#sx2").html(data.result[0].name);
+						$("#sx3").html(data.result[0].bianhao);
+						$("#sx4").html(data.result[0].jihanliang);
+						$("#sx5").html(data.result[0].chicun);
+						$("#sx6").html(data.result[0].chandi);
+						$("#sx7").html(data.result[0].shuliang);
+						$("#sx8").html(data.result[0].baozhuang);
+						$("#sx9").html(data.result[0].baozhiqi);
+						$("#sx10").html(data.result[0].cuchunfangshi);
+
+						var h = '';
+						$("#pimg").attr("src","/upload/"+data.result1[0].name);
+						var imglist = '';
+						for(var i in data.result1){
+							imglist = imglist + "<img src='/upload/"+data.result1[i].name+"' style='width:60px;height:50px;margin:10px;cursor:pointer;' onclick='changeImg("+i+")' />";
+						}
+						$("#imglist").html(imglist);
+						//console.log(data.result[0].name);
+						
+					}
+				});
+			});
+
+			function changeImg(i){
+				$("#pimg").attr("src","/upload/"+d.result1[i].name);
+			}
+
 			function loadP(i){
 				window.location = 'mall.html';
 			}
 
-			var url=window.location.href;
-			var arr1 = url.split("?id=");
-			/*加载产品信息*/
-			$.ajax({
-				type: "post",
-				url: "/product/getById",
-				data: {
-					id:arr1[1]
-			    },
-				success: function(data) {
-					var h = '';
-					
-					$("#nlist").html(h);
+			function gotoCart(){
+				var sessionID = window.sessionStorage.sessionID;
+				if(sessionID){
+					$.ajax({
+						type: "post",
+						url: "/service/addCart",
+						data: {
+							num1:$("#num1").val(),
+							proid:proid,
+							sessionID:sessionID
+						},
+						success: function(data) {
+							if(data == "200"){
+								alert("添加到购物车成功！");
+								getCartNum();
+							}
+						}
+					});
+				}else{
+					gotologin();
 				}
-			});
+			}
 		</script>
 	</body>
 </html>

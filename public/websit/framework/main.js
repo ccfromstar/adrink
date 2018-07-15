@@ -4,7 +4,7 @@ $(function(){
 	txtHeader += '<div class="w960" style="text-align:right">';
 	if(sessionID){
 		txtHeader += '欢迎您，'+sessionID+' <span style="margin-left:10px;cursor:pointer;" onclick="gotologout()">登出</span> <img src="../framework/order.png" style="height:20px;margin-left:10px;margin-top:-5px" /> 我的订单 ';
-	txtHeader += '<div class="cw-icon"><i class="ci-count" id="shopping-amount">0</i><img style="height:25px;margin-left:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
+	txtHeader += '<div class="cw-icon"><i class="ci-count" id="shopping-amount">-</i><img onclick="referToCart()" style="height:25px;margin-left:10px;margin-top:-5px;cursor:pointer;" src="../framework/cart.png" /></div>';
 	
 	}else{
 		txtHeader += '<span style="margin-left:20px;cursor:pointer;" onclick="gotologin()">登录</span> | <span style="cursor:pointer;" onclick="gotoreg()">注册</span> ';
@@ -77,6 +77,7 @@ $(function(){
 	if(url.indexOf("mall")!=-1){
 		$("#m4").css("color","red");
 	}
+	getCartNum();
 });
 
 function searchPro(){
@@ -155,6 +156,19 @@ function loginUser(){
 	});
 }
 
+function getCartNum(){
+	$.ajax({
+		type: "post",
+		url: "/service/getCartNum",
+		data: {
+			sessionID:window.sessionStorage.sessionID
+		},
+		success: function(data) {
+			$("#shopping-amount").html(data[0].count);	
+		}
+	});
+}
+
 function gotoreg(){
 	window.location = 'reg.html';
 }
@@ -167,4 +181,8 @@ function gotologin(){
 function gotologout(){
 	sessionStorage.removeItem('sessionID');
 	window.location.reload();
+}
+
+function referToCart(){
+	window.location = 'cart.html';
 }
