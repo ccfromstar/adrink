@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>爱饮(上海)</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		
+		<link rel="stylesheet" href="../framework/amazeui/amazeui.min.css" />
+
+		<script src="../framework/jquery-1.9.1.js"></script>
+		<script src="../framework/amazeui/amazeui.min.js"></script>
+		<script src="../framework/main.js"></script>
+		
+		<link rel="stylesheet" href="../framework/css/admin.css">
+
+		<style>
+			.none{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!--header-->
+		<div id="header" class="bgheader"></div>
+		<!--菜单-->
+		<div id="menu" class="bgmenu"></div>
+		<!--主页内容-->
+		<div class="bgmain2" >
+			<div class="w960">
+				<br/>
+				<div class="menu">首页 > 个人中心 > 购物车 > 结算</div>
+				<div style="background-color: white;width:100%;margin-top : 20px">
+					<div style="height: 30px;"></div>
+					<div style="font-size:16px;width:960px;background-color: rgb(243,243,243);padding: 5px;font-weight: bold;">确认收货信息</div>
+					<table class="userinfo">
+						<tr>
+							<td>所在地区：</td>
+							<td>中国大陆 <input type="text" id="sh_shen" name=""> 省 <input id="sh_shi" type="text" name=""> 市 <input id="sh_qu" type="text" name=""> 区</td>
+						</tr>
+						<tr>
+							<td>详细地址：</td>
+							<td><textarea id="sh_address" style="width:700px;" placeholder="建议您如实填写详细收货地址"></textarea></td>
+						</tr>
+						<tr>
+							<td>收货人姓名：</td>
+							<td><input type="" id="sh_name"  name=""></td>
+						</tr>
+						<tr>
+							<td>手机号码：</td>
+							<td>中国大陆+86 <input id="sh_sjh" type="" name=""></td>
+						</tr>
+					</table>
+					<div style="height: 10px;"></div>
+					<div style="display:inline-block;background-color: rgb(231,59,59);color:white;width:100px;text-align: center;margin-top: 5px;margin-left:10px;border-radius: 5px;padding: 5px;cursor: pointer;" onclick="setInfo()">确&nbsp;&nbsp;&nbsp;认</div>
+					<div style="height: 20px;"></div>
+					<div style="font-size:16px;width:960px;background-color: rgb(243,243,243);padding: 5px;font-weight: bold;">确认订单信息</div>
+					<table style="width:960px;">
+						<thead>
+							<tr>
+								<td>&nbsp;</td>
+								<td>商品信息</td>
+								<td>单价</td>
+								<td>数量</td>
+								<td>金额</td>
+								<td>重量</td>
+							</tr>
+						</thead>
+						<tbody id="cartBody"></tbody>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td style="padding:15px 0">合计</td>
+							<td id="numTotal"></td>
+							<td id="numPTotal" style="color:red;"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td style="padding:15px 0">运费</td>
+							<td></td>
+							<td id="yunfei" style="color:red;"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td style="padding:15px 0">总计（含运费）</td>
+							<td></td>
+							<td id="numAllTotal" style="color:red;"></td>
+							<td></td>
+						</tr>
+					</table>
+					<div style="float:left;width:50%;">
+						<div style="margin-left:20px;">给买家留言</div>
+						<textarea id="remark" style="width:96%;height: 146px;margin-left: 20px;margin-top: 5px;margin-bottom: 20px;" placeholder="选填，填写内容已和商家确认"></textarea>
+					</div>
+					<div style="float:left;width:50%;">
+						<div style="border: 2px solid red;width:440px;margin-left: 20px;margin-top: 27px;">
+							<div style="font-size:18px;font-weight: bold;margin-left:20px;margin-top: 20px;">实付款<span id="numAllTotal1" style="color:red;font-weight: bold;margin-left: 180px;"></span></div>
+							<div style="margin-left:20px;">寄送至：<span id="linkaddress"></span></div>
+							<div style="margin-left:20px;">联系人：<span id="linkinfo"></span></div>
+							<div style="display:inline-block;background-color: rgb(231,59,59);color:white;width:440px;text-align: center;cursor: pointer;padding: 9px;margin-top: 10px;" onclick="createBooking()">请确认信息无误后，提交订单</div>
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+		<!--footer-->
+		<div id="footer" class="bgfooter"></div>
+		<script type="text/javascript">
+			var idlist = '';
+			$(function(){
+				$.ajax({
+					type: "post",
+					url: "/service/getCart",
+					data: {
+						sessionID:window.sessionStorage.sessionID
+					},
+					success: function(data) {
+						var h = "";
+						var numTotal = 0;
+						var numPTotal = 0;
+						var numWeight = 0;
+						var yunfei = 0;
+						var numAllTotal = 0;
+						for(var i in data){
+							h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
+							h = h + "<td><img class='main_image1' src='/upload/"+data[i].imgname+"'></img></td>";
+							h = h + "<td>"+data[i].name+"</td>";
+							h = h + "<td style='color:red'>¥"+data[i].price+"</td>";
+							h = h + "<td>"+data[i].num+"</td>";
+							h = h + "<td style='color:red'>¥"+(data[i].price)*(data[i].num)+"</td>";
+							h = h + "<td>"+data[i].weight+"</td>";
+							h = h + "</tr>";
+							h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
+							h = h + "<td colspan='7' style='height:10px;'></td>";
+							h = h + "</tr>";
+							numTotal = numTotal + data[i].num;
+							numPTotal = numPTotal + (data[i].price)*(data[i].num);
+							//numWeight = numWeight + data[i].weight;
+							if(idlist==""){
+								idlist = data[i].id;
+							}else{
+								idlist = idlist + "@" + data[i].id;
+							}
+						}	
+						$("#cartBody").html(h);
+						$("#numTotal").html(numTotal);
+						$("#numTotal1").html(numTotal);
+						$("#numPTotal").html("¥"+numPTotal);
+						$("#numPTotal1").html("¥"+numPTotal);
+						//$("#numWeight").html(numWeight);
+						if(numPTotal > 100){
+							yunfei = 0;
+						}else{
+							yunfei = 12;
+						}
+						numAllTotal = numPTotal + yunfei;
+						$("#yunfei").html("¥"+yunfei);
+						$("#numAllTotal").html("¥"+numAllTotal);
+						$("#numAllTotal1").html("¥"+numAllTotal);
+					}
+				});
+			});
+
+			function setInfo(){
+				$("#linkaddress").html($("#sh_shen").val()+"省"+$("#sh_shi").val()+"市"+$("#sh_qu").val()+"区"+$("#sh_address").val());
+				$("#linkinfo").html($("#sh_name").val()+" "+$("#sh_sjh").val());
+			}
+
+			function createBooking(){
+				var address = $("#linkaddress").html()+" "+$("#linkinfo").html();
+				var remark = $("#remark").val();
+				$.ajax({
+						type: "post",
+						url: "/service/createBooking",
+						data: {
+							address:address,
+							remark:remark,
+							idlist:idlist,
+							sessionID:window.sessionStorage.sessionID
+						},
+						success: function(data) {
+							alert("订单提交成功");
+							window.location = 'option.html';
+						}
+				});
+			}
+		</script>
+	</body>
+</html>

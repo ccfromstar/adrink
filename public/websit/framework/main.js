@@ -3,7 +3,7 @@ $(function(){
 	var txtHeader = '';
 	txtHeader += '<div class="w960" style="text-align:right">';
 	if(sessionID){
-		txtHeader += '欢迎您，'+sessionID+' <span style="margin-left:10px;cursor:pointer;" onclick="gotologout()">登出</span> <img src="../framework/order.png" style="height:20px;margin-left:10px;margin-top:-5px" /> 我的订单 ';
+		txtHeader += '欢迎您，'+sessionID+' <span style="margin-left:10px;cursor:pointer;" onclick="gotologout()">登出</span> <img src="../framework/order.png" onclick="gotomy()"  style="height:20px;margin-left:10px;margin-top:-5px;cursor:pointer;" /> <span onclick="gotomy()" style="cursor:pointer;">我的订单</span> ';
 	txtHeader += '<div class="cw-icon"><i class="ci-count" id="shopping-amount">-</i><img onclick="referToCart()" style="height:25px;margin-left:10px;margin-top:-5px;cursor:pointer;" src="../framework/cart.png" /></div>';
 	
 	}else{
@@ -164,7 +164,12 @@ function getCartNum(){
 			sessionID:window.sessionStorage.sessionID
 		},
 		success: function(data) {
-			$("#shopping-amount").html(data[0].count);	
+			if(data[0].count){
+				$("#shopping-amount").html(data[0].count);
+			}else{
+				$("#shopping-amount").html("0");
+			}
+				
 		}
 	});
 }
@@ -185,4 +190,8 @@ function gotologout(){
 
 function referToCart(){
 	window.location = 'cart.html';
+}
+
+function gotomy(){
+	window.location = 'option.html';
 }

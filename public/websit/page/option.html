@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>爱饮(上海)</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		
+		<link rel="stylesheet" href="../framework/amazeui/amazeui.min.css" />
+
+		<script src="../framework/jquery-1.9.1.js"></script>
+		<script src="../framework/amazeui/amazeui.min.js"></script>
+		<script src="../framework/main.js"></script>
+		
+		<link rel="stylesheet" href="../framework/css/admin.css">
+
+		<style>
+			.none{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!--header-->
+		<div id="header" class="bgheader"></div>
+		<!--菜单-->
+		<div id="menu" class="bgmenu"></div>
+		<!--主页内容-->
+		<div class="bgmain2" >
+			<div class="w960">
+				<br/>
+				<div class="menu">首页 > 个人中心 > 我的订单</div>
+				<div style="background-color: white;width:100%;margin-top : 20px">
+					<div style="float:left">
+						<ul class="typelist">
+							<li class="active" onclick="loadP(0)">所有订单</li>
+							<li onclick="loadP(1)">待付款</li>
+							<li onclick="loadP(2)">待发货</li>
+							<li onclick="loadP(3)">待收货</li>
+						</ul>
+					</div>
+					<div style="float:right">
+						
+					</div>
+					<div style="clear: both;"></div>
+					<div style="margin-top:20px;margin-left: 7px;">
+						<input id="pname" type="text" style="width:200px" placeholder=" 输入商品标题或订单号"></input> 订单搜索
+					</div>
+					<div style="float:left">
+						<table style="width:660px;margin-top: 30px;">
+							<thead>
+								<tr style="background-color: rgb(229,229,229)">
+									<td style="padding-top:10px;padding-bottom: 10px;"><input style="margin-left: 10px;" type="checkbox" checked="checked" name=""></td>
+									<td>全选</td>
+									<td>商品信息</td>
+									<td>单价</td>
+									<td>数量</td>
+									<td>商品操作</td>
+								</tr>
+							</thead>
+							<tbody id="cartBody"></tbody>
+						
+						</table>
+					</div>
+					<div style="float:right">
+						<table style="width:300px;margin-top: 30px;">
+							<thead>
+								<tr style="background-color: rgb(229,229,229)">
+									<td></td>
+									<td style="padding-top:10px;padding-bottom: 11px;">实付款</td>
+									<td>交易状态</td>
+									<td>交易操作</td>
+								</tr>
+							</thead>
+							<tbody id="cartBody1"></tbody>
+						
+						</table>
+					</div>
+					<div style="clear: both;"></div>
+					<div style="height: 60px;"></div>
+				</div>
+			</div>
+		</div>
+		<!--footer-->
+		<div id="footer" class="bgfooter"></div>
+		<script type="text/javascript">
+			$(function(){
+				$.ajax({
+					type: "post",
+					url: "/service/getBooking",
+					data: {
+						sessionID:window.sessionStorage.sessionID
+				    },
+					success: function(data) {
+						for(var i in data){
+							var h = "";
+							var h1 = "";
+							var numTotal = 0;
+							var numPTotal = 0;
+							var d = data[0].date;
+							h = h + "<tr style='background-color:rgb(234,248,253);border:1px solid rgb(208,208,208);'>";
+							h = h + "<td style='padding-top:10px;padding-bottom:10px;' colspan='9'><input style='margin-left: 10px;' checked='checked' type='checkbox' name=''> "+d.substring(0,10)+" 订单号："+data[0].bookingno+"</td>";
+							h = h + "</tr>";
+
+							h1 = h1 + "<tr style='background-color:rgb(234,248,253);border:1px solid rgb(208,208,208);'>";
+							h1 = h1 + "<td style='padding-top:11px;padding-bottom:10px;' colspan='9'>&nbsp;</td>";
+							h1 = h1 + "</tr>";
+
+							var row = 0;
+
+							for(var i in data){
+								
+								h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
+								h = h + "<td><input style='margin-left: 10px;' checked='checked' type='checkbox' name=''></td>";
+								h = h + "<td><img class='main_image1' src='/upload/"+data[i].imgname+"'></img></td>";
+								h = h + "<td>"+data[i].name+"</td>";
+								h = h + "<td style='color:red'>¥"+data[i].price+"</td>";
+								h = h + "<td>"+data[i].num+"</td>";
+								h = h + "<td style='cursor:pointer;' onclick='showinfo1()'>退货/退款<br/>联系客服</td>";
+								h = h + "</tr>";
+
+								numTotal = numTotal + data[i].num;
+								numPTotal = numPTotal + (data[i].price)*(data[i].num);
+								row ++;
+							}	
+
+							    h1 = h1 + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
+							    h1 = h1 + "<td>&nbsp;&nbsp;&nbsp;</td>";
+								h1 = h1 + "<td style='height:"+row*91+"px;color:red;font-weight:bold;font-size:18px;'>¥"+numPTotal+"</td>";
+								h1 = h1 + "<td>"+data[0].state+"</td>";
+								h1 = h1 + "<td>";
+								h1 = h1 + "<div style='color:white;background-color:rgb(0,164,220);text-align:center;width:70px;border-radius:4px;'>去支付</div>";
+								h1 = h1 + "<div>&nbsp;&nbsp;取消订单</div>";
+								h1 = h1 + "<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</div>";
+								h1 = h1 + "</td>";
+								h1 = h1 + "</tr>";
+
+							$("#cartBody").html(h);
+							$("#cartBody1").html(h1);
+						}
+					}
+				});
+			});
+
+			function showinfo1(){
+				alert("请联系客服进行退货/退款，客服热线021-33445566");
+			}
+		</script>
+	</body>
+</html>

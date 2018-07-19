@@ -469,6 +469,26 @@ exports.servicedo = function(req, res) {
 				res.send("400");
 			}
 		});
+	} else if(_sql == "createBooking") {
+		var address = req.param("address");
+		var remark = req.param("remark");
+		var idlist = req.param("idlist");
+		var sessionID = req.param("sessionID");
+		var bookingno = new Date().getTime();
+
+		var sql = "insert into booking(bookingno,date,state,address,remark,userid) values('"+bookingno+"',now(),'订单未支付','"+address+"','"+remark+"','"+sessionID+"');";
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			var arr2 = idlist.split("@");
+			console.log(idlist);
+			for(var i=0;i<arr2.length;i++){
+				var sql2 = "update cart set bookingno = '"+bookingno+"' where proID='"+arr2[i]+"'";
+				mysql.query(sql2, function(err, result2) {
+					if(err) return console.error(err.stack);
+				});
+			}
+			res.send("200");
+		});
 	} else if(_sql == "checkUser") {
 		var mobile = req.param("mobile");
 		var pwd = req.param("pwd");
@@ -492,9 +512,16 @@ exports.servicedo = function(req, res) {
 			if(err) return console.error(err.stack);
 			res.send(result);
 		});
+	} else if(_sql == "getBooking") {
+		var sessionID = req.param("sessionID");
+		var sql = "select * from v_booking where userid = '"+sessionID+"' group by bianhao";
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			res.send(result);
+		});
 	} else if(_sql == "getCartNum") {
 		var sessionID = req.param("sessionID");
-		var sql = "select sum(num) as count from cart where userid = '"+sessionID+"'";
+		var sql = "select sum(num) as count from cart where userid = '"+sessionID+"' and bookingno =''";
 		console.log(sql);
 		mysql.query(sql, function(err, result) {
 			if(err) return console.error(err.stack);
@@ -503,7 +530,7 @@ exports.servicedo = function(req, res) {
 		});
 	} else if(_sql == "getCart") {
 		var sessionID = req.param("sessionID");
-		var sql = "select * from v_cart where userid = '"+sessionID+"'";
+		var sql = "select * from v_cart where userid = '"+sessionID+"' and bookingno ='' group by bianhao";
 		console.log(sql);
 		mysql.query(sql, function(err, result) {
 			if(err) return console.error(err.stack);
