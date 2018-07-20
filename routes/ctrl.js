@@ -37,6 +37,15 @@ module.exports = function (app, routes) {
     app.get('/product',routes.product);
     app.post('/product/:sql',routes.productdo);
 
+    app.get('/erp/view_booking',routes.booking);
+    app.post('/erp/booking/:sql',routes.bookingdo);
+
+    app.get('/erp/view_user',routes.view_user);
+    //app.post('/erp/user/:sql',routes.userdo);
+
+    app.get('/erp/view_tj',routes.view_tj);
+    //app.post('/erp/tj/:sql',routes.tjdo);
+
     app.get('/_upload',routes._upload);
     app.get('/_uploadsuccess',routes._uploadsuccess);
     app.post('/_uploaddo',routes._uploaddo);

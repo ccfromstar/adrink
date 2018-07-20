@@ -6,6 +6,18 @@
 
 	<table class="am-table am-table-bordered" style="width:100%;margin: 10px;">
 		<tr>
+			<td>类别</td>
+			<td>
+				<input type="text" list="gyslist" id="type">
+				<datalist id="gyslist">
+					<option value="饮料">饮料</option>
+					<option value="甜品">甜品</option>
+					<option value="零食">零食</option>
+					<option value="冰淇凌">冰淇凌</option>
+				</datalist>
+			</td>
+		</tr>
+		<tr>
 			<td>产品名称</td>
 			<td><input type="text" id="name"></td>
 		</tr>
@@ -65,24 +77,14 @@
 			<td>图片</td>
 			<td>
 				<iframe frameborder=0 src="/_upload" style="width:550px;height:60px"></iframe>
+				<div id="imglist"></div>
 			</td>
 		</tr>
 		<tr>
 			<td>产品介绍</td>
 			<td><textarea id="post" name="post"></textarea></td>
 		</tr>
-		<tr>
-			<td>类别</td>
-			<td>
-				<input type="text" list="gyslist" id="type">
-				<datalist id="gyslist">
-					<option value="饮料">饮料</option>
-					<option value="甜品">甜品</option>
-					<option value="零食">零食</option>
-					<option value="冰淇淋">冰淇淋</option>
-				</datalist>
-			</td>
-		</tr>
+		
 		<tr>
 			<td>产品特色</td>
 			<td><input type="text" id="feature"></td>
@@ -132,6 +134,21 @@
 					$('#feature').val(data[0].feature);
 					
 					editor.html(data[0].post);
+
+					$.ajax({
+						type: "post",
+						url: "product/getImgById",
+						data: {
+							id: data[0].bianhao
+						},
+						success: function(data) {
+							var s = '';
+							for(var i in data){
+								s = s + "<img src='/upload/"+data[i].name+"' style='width:100px;height100px;'> ";
+							}
+							$("#imglist").html(s);
+						}
+					});
 				}
 			});
 		}

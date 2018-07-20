@@ -1,0 +1,61 @@
+<% include header %>
+<div class="am-cf am-padding">
+	<div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">报表管理</strong> / <small>列表</small></div>
+</div>
+<div class="am-g">
+	<div class="am-u-sm-12 am-u-md-12">
+		<div class="am-btn-toolbar">
+			<div class="am-btn-group am-btn-group-xs">
+				<input type="text" id="startDate" class="am-form-field" style="width:120px;display: inline-block;" placeholder="日期" data-am-datepicker readonly />
+
+			</div>
+			<button type="button" onclick="search()" class="btn-c am-btn am-btn-primary am-btn">检索</button>
+		</div>
+	</div>
+
+	<div class="am-g">
+		<div class="am-u-sm-12">
+			<form class="am-form">
+				<table class="am-table am-table-striped am-table-hover table-main jdt-table">
+					<thead>
+						<tr>
+							<th>产品名称</th>
+							<th>数量</th>
+							<th>金额</th>
+							<th>日期</th>
+							<th class="am-hide-sm-only table-set">操作</th>
+						</tr>
+					</thead>
+					<tbody id="json_tbody">
+						
+					</tbody>
+				</table>
+				<div class="am-cf">
+					共<span id="total"></span>条记录
+					<div class="am-fr">
+						<ul class="am-pagination" id="pagination">
+							
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="am-modal am-modal-confirm" tabindex="-1" id="del-confirm">
+		<div class="am-modal-dialog">
+			<div class="am-modal-hd">提示</div>
+			<div class="am-modal-bd">
+				你，确定要删除这条记录吗？
+			</div>
+			<div class="am-modal-footer">
+				<span class="am-modal-btn" data-am-modal-cancel>取消</span>
+				<span class="am-modal-btn" data-am-modal-confirm onClick="delDoc(0)">确定</span>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<script>
+	//loadNews();
+</script>
+<% include footer %>
