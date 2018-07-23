@@ -23,7 +23,7 @@ body{
 }
 .bgmain_top{
   background: rgb(245,244,249);
-  height: 340px;
+  height: 290px;
 }
 .bgfooter{
   background: rgb(245,244,249);
@@ -51,7 +51,7 @@ dl{
 }
 .main_image{
   width:300px;
-  height:270px;
+  height:220px;
   background: rgb(179,179,179);
   margin:auto;
 }
@@ -136,4 +136,23 @@ dl{
 }
 .userinfo td{
   padding:10px;
+}
+.redline{
+  margin-top: -30px;
+}
+.active1{
+  color:red;
+  border-bottom: 2px solid red;
+  width:100px;
+  cursor: pointer;
+  margin-top: 8px !important;
+}
+.linew:hover{
+  color: red;
+}
+.fdl dd:hover{
+  color:red;
+}
+.fdll1:hover{
+  color:red;
 }

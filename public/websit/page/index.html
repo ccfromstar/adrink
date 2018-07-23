@@ -25,39 +25,52 @@
 	</head>
 	<body>
 		<!--header-->
-		<div id="header" class="bgheader"></div>
+		<div id="header" class="bgheader" style="position: fixed;top:0;left:0;width: 100%;z-index: 999999999999"></div>
 		<!--菜单-->
-		<div id="menu" class="bgmenu"></div>
+		<div id="menu" class="bgmenu" style="margin-top: 30px;"></div>
 		<!--主页内容-->
 		<div id="main_top" class="bgmain_top">
 			<div class="w960">
-				<div style="float:left;text-align:center;width:33.3%"><div style="margin:10px">自动售货机</div><div class="main_image"></div></div>
-				<div style="float:left;text-align:center;width:33.3%"><div style="margin:10px">预包装食品</div><div class="main_image"></div></div>
-				<div style="float:left;text-align:center;width:33.3%"><div style="margin:10px">电子设备</div><div class="main_image"></div></div>
+				
+				<div style="float:left;text-align:center;width:33.3%"><div onmouseover="setH(1)" id="HH1" class="active1" style="margin:10px auto">自动售货机</div><img id="IMG1" class="main_image" src="../framework/a1.jpg" /></div>
+				<div style="float:left;text-align:center;width:33.3%"><div onmouseover="setH(2)" id="HH2" style="margin:10px auto">预包装食品</div><img id="IMG2" class="main_image" src="../framework/a2.jpg" /></div>
+				<div style="float:left;text-align:center;width:33.3%"><div onmouseover="setH(3)" id="HH3" style="margin:10px auto">电子设备</div><img id="IMG3" class="main_image" src="../framework/a3.jpg" /></div>
 				<div style="clear:both;"></div>
 			</div>
 		</div>
 		<div class="bgmain" >
 			<!--翻页广告区-->
 			<div class="w960">
-				<img style="margin-top:30px;margin-left:7px;width:946px;" src="../framework/adv1.png">
+				<div style="height: 30px;"></div>
+				<!--<img style="margin-top:30px;margin-left:7px;width:946px;" src="../framework/adv1.png">-->
+				<div class="am-slider am-slider-default" style="margin-left:7px;width:946px;" data-am-flexslider id="demo-slider-0">
+				  <ul class="am-slides">
+				    <li><img src="../framework/1.jpg" /></li>
+				    <li><img src="../framework/2.jpg" /></li>
+				    <li><img src="../framework/3.jpg" /></li>
+				    <li><img src="../framework/4.jpg" /></li>
+				    <li><img src="../framework/5.jpg" /></li>
+				  </ul>
+				</div>
 			</div>
 			<!--最新上架区-->
 			<div class="w960">
-				<div style="width:960px;text-align: center;margin-top: 30px">
-					<div style="font-weight: bold;font-size: 24px;">最新上架</div>
-					<div style="font-size: 20px;border-top:3px solid red;width:200px;margin: auto">NEW PRODUCTS</div>
+				<div style="width:960px;text-align: center;margin-top: 50px">
+					<div style="font-weight: bold;font-size: 18px;">最 新 上 架</div>
+					<img src="../framework/redline.png" style="margin-top: -25px;">
+					<div style="font-size: 14px;width:200px;margin: auto;margin-top:-20px;">NEW PRODUCTS</div>
 				</div>
 
-				<div id="p1"></div>
+				<div id="p1" style="margin-top: 20px;"></div>
 			</div>
 			<!--最新消息区-->
 			<div class="w960">
 				<div style="width:960px;text-align: center;margin-top: 30px">
-					<div style="font-weight: bold;font-size: 24px;">最新消息</div>
-					<div style="font-size: 20px;border-top:3px solid red;width:200px;margin: auto">NEW MESSAGE</div>
+					<div style="font-weight: bold;font-size: 18px;">最 新 消 息</div>
+					<img src="../framework/redline.png" style="margin-top: -25px;">
+					<div style="font-size: 14px;width:200px;margin: auto;margin-top:-20px;">NEW MESSAGE</div>
 				</div>
-				<div style="padding:10px;background: #fff;border: 10px solid rgb(244,243,248)">
+				<div style="padding:10px;background: #fff;border: 10px solid rgb(244,243,248);margin-top: 20px;">
 					<ul id="nlist" style="margin-top:20px;cursor: pointer;" onclick="window.location='newinfo.html';">
 						
 					</ul>
@@ -74,12 +87,16 @@
 				url: "/news/getTop",
 				success: function(data) {
 					var h = '';
+					var k = 0;
 					for(var i in data){
-						h = h + '<li>';
+						k = k + 1;
+						h = h + '<li class="linew">';
 						h = h + '<div style="float:left">'+data[i].title+'</div>';
 						h = h + '<div style="float:right">'+data[i].publishAt+'</div>';
 						h = h + '<div style="clear:both"></div>';
-						h = h + '<hr style="margin-top:5px;margin-bottom:5px;BORDER-BOTTOM-STYLE: dashed; BORDER-LEFT-STYLE: dashed; BORDER-RIGHT-STYLE: dashed; BORDER-TOP-STYLE: dashed" color=#111111 size=1>';
+						if(k<6){
+							h = h + '<hr style="margin-top:5px;margin-bottom:5px;BORDER-BOTTOM-STYLE: dashed; BORDER-LEFT-STYLE: dashed; BORDER-RIGHT-STYLE: dashed; BORDER-TOP-STYLE: dashed" color=#111111 size=1>';
+						}
 						h = h + '</li>';	 
 					}
 					$("#nlist").html(h);
@@ -95,13 +112,13 @@
 					for(var i in data){
 						pno = pno + 1;
 						h += '<div style="float:left;text-align:center;width:33.3%">';
-						h += '<img class="main_image" src="/upload/'+data[i].imgname+'"></img>';
-						h += '<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">';
-						h += '<div style="font-size: 16px;">'+data[i].name+'</div>';
-						h += '<div style="color: rgb(102,198,232);height: 40px;">'+data[i].feature+'</div>';
+						h += '<img style="cursor:pointer;" onclick="openDetail('+data[i].id+')" class="main_image" src="/upload/'+data[i].imgname+'"></img>';
+						h += '<div  style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px;">';
+						h += '<div onclick="openDetail('+data[i].id+')" style="font-size: 16px;height:50px;cursor:pointer;">'+data[i].name+'</div>';
+						h += '<div onclick="openDetail('+data[i].id+')" style="color: rgb(102,198,232);height: 50px;cursor:pointer;">'+data[i].feature+'</div>';
 						h += '<div>';
 						h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
-						h += '<div style="float:right"><img onclick="openDetail('+data[i].id+')" style="cursor:pointer;height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
+						h += '<div style="float:right"><img  style="cursor:pointer;height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" onclick="gotoCart('+data[i].id+')" /></div>';
 						h += '<div style="clear:both;"></div>';
 						h += '</div>';
 						h += '</div>';
@@ -117,6 +134,29 @@
 					$("#p1").html(h);
 				}
 			});
+
+			function gotoCart(proid){
+				var sessionID = window.sessionStorage.sessionID;
+				if(sessionID){
+					$.ajax({
+						type: "post",
+						url: "/service/addCart",
+						data: {
+							num1:1,
+							proid:proid,
+							sessionID:sessionID
+						},
+						success: function(data) {
+							if(data == "200"){
+								alert("添加到购物车成功！");
+								getCartNum();
+							}
+						}
+					});
+				}else{
+					gotologin();
+				}
+			}
 		</script>
 	</body>
 </html>
