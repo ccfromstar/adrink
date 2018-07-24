@@ -3,8 +3,8 @@ $(function(){
 	var txtHeader = '';
 	txtHeader += '<div class="w960" style="text-align:right">';
 	if(sessionID){
-		txtHeader += '欢迎您，'+sessionID+' <span style="margin-left:10px;cursor:pointer;" onclick="gotologout()">登出</span> <img src="../framework/order.png" onclick="gotomy()"  style="height:20px;margin-left:10px;margin-top:-5px;cursor:pointer;" /> <span onclick="gotomy()" style="cursor:pointer;">我的订单</span> ';
-	txtHeader += '<div class="cw-icon"><i class="ci-count" id="shopping-amount">-</i><img onclick="referToCart()" style="height:25px;margin-left:10px;margin-top:-5px;cursor:pointer;" src="../framework/cart.png" /></div>';
+		txtHeader += '欢迎您，'+sessionID+' <span style="margin-left:10px;cursor:pointer;margin-top:3px;display:inline-block" onclick="gotologout()">登出</span> <img src="../framework/order.png" onclick="gotomy()"  style="height:20px;margin-left:10px;margin-top:-5px;cursor:pointer;" /> <span onclick="gotomy()" style="cursor:pointer;">我的订单</span> ';
+	txtHeader += '<div class="cw-icon"><div class="ci-count" id="shopping-amount">-</div><img onclick="referToCart()" style="height:20px;margin-left:10px;margin-top:-5px;cursor:pointer;" src="../framework/cart.png" /></div>';
 	
 	}else{
 		txtHeader += '<span style="margin-left:20px;display:inline-block;cursor:pointer;margin-top:3px" onclick="gotologin()">登录</span> | <span style="cursor:pointer;" onclick="gotoreg()">注册</span> ';

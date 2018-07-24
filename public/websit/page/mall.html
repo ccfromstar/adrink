@@ -32,7 +32,17 @@
 		<div class="bgmain" >
 			<!--翻页广告区-->
 			<div class="w960">
-				<img style="margin-top:30px;margin-left:7px;width:946px;" src="../framework/adv1.png">
+				<div style="height: 30px;"></div>
+				<!--<img style="margin-top:30px;margin-left:7px;width:946px;" src="../framework/adv1.png">-->
+				<div class="am-slider am-slider-default" style="margin-left:7px;width:946px;" data-am-flexslider id="demo-slider-0">
+				  <ul class="am-slides">
+				    <li><img src="../framework/1.jpg" /></li>
+				    <li><img src="../framework/2.jpg" /></li>
+				    <li><img src="../framework/3.jpg" /></li>
+				    <li><img src="../framework/4.jpg" /></li>
+				    <li><img src="../framework/5.jpg" /></li>
+				  </ul>
+				</div>
 			</div>
 			<!--产品列表区-->
 			<div class="w960">
@@ -112,17 +122,17 @@
 							for(var i in data){
 								pno = pno + 1;
 								h += '<div style="float:left;text-align:center;width:33.3%">';
-								h += '<img class="main_image" src="/upload/'+data[i].imgname+'"></img>';
-								h += '<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">';
-								h += '<div style="font-size: 16px;">'+data[i].name+'</div>';
-								h += '<div style="color: rgb(102,198,232);height: 40px;">'+data[i].feature+'</div>';
-								h += '<div>';
-								h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
-								h += '<div style="float:right"><img style="height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
-								h += '<div style="clear:both;"></div>';
-								h += '</div>';
-								h += '</div>';
-								h += '</div>';
+						h += '<img style="cursor:pointer;" onclick="openDetail('+data[i].id+')" class="main_image" src="/upload/'+data[i].imgname+'"></img>';
+						h += '<div  style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px;">';
+						h += '<div onclick="openDetail('+data[i].id+')" style="font-size: 16px;height:50px;cursor:pointer;">'+data[i].name+'</div>';
+						h += '<div onclick="openDetail('+data[i].id+')" style="color: rgb(102,198,232);height: 50px;cursor:pointer;">'+data[i].feature+'</div>';
+						h += '<div>';
+						h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
+						h += '<div style="float:right"><img  style="cursor:pointer;height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" onclick="gotoCart('+data[i].id+')" /></div>';
+						h += '<div style="clear:both;"></div>';
+						h += '</div>';
+						h += '</div>';
+						h += '</div>';
 								if(pno == 3 || pno == 6 || pno == 9 ){
 									h += '<div style="clear:both;"></div><div style="height:30px;"></div>';
 								}
@@ -147,17 +157,17 @@
 							for(var i in data){
 								pno = pno + 1;
 								h += '<div style="float:left;text-align:center;width:33.3%">';
-								h += '<img class="main_image" src="/upload/'+data[i].imgname+'"></img>';
-								h += '<div style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px">';
-								h += '<div style="font-size: 16px;">'+data[i].name+'</div>';
-								h += '<div style="color: rgb(102,198,232);height: 40px;">'+data[i].feature+'</div>';
-								h += '<div>';
-								h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
-								h += '<div style="float:right"><img onclick="openDetail('+data[i].id+')" style="cursor:pointer;height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" /></div>';
-								h += '<div style="clear:both;"></div>';
-								h += '</div>';
-								h += '</div>';
-								h += '</div>';
+						h += '<img style="cursor:pointer;" onclick="openDetail('+data[i].id+')" class="main_image" src="/upload/'+data[i].imgname+'"></img>';
+						h += '<div  style="background: rgb(244,243,248);width:300px;margin:auto;text-align: left;padding: 10px;">';
+						h += '<div onclick="openDetail('+data[i].id+')" style="font-size: 16px;height:50px;cursor:pointer;">'+data[i].name+'</div>';
+						h += '<div onclick="openDetail('+data[i].id+')" style="color: rgb(102,198,232);height: 50px;cursor:pointer;">'+data[i].feature+'</div>';
+						h += '<div>';
+						h += '<div style="float:left;color:red;font-size: 16px;">￥ '+data[i].price+'</div>';
+						h += '<div style="float:right"><img  style="cursor:pointer;height:25px;margin-right:10px;margin-top:-5px" src="../framework/cart.png" onclick="gotoCart('+data[i].id+')" /></div>';
+						h += '<div style="clear:both;"></div>';
+						h += '</div>';
+						h += '</div>';
+						h += '</div>';
 								if(pno == 3 || pno == 6 || pno == 9 ){
 									h += '<div style="clear:both;"></div><div style="height:30px;"></div>';
 								}
@@ -166,6 +176,29 @@
 							$("#p1").html(h);
 						}
 					});
+				}
+			}
+
+			function gotoCart(proid){
+				var sessionID = window.sessionStorage.sessionID;
+				if(sessionID){
+					$.ajax({
+						type: "post",
+						url: "/service/addCart",
+						data: {
+							num1:1,
+							proid:proid,
+							sessionID:sessionID
+						},
+						success: function(data) {
+							if(data == "200"){
+								alert("添加到购物车成功！");
+								getCartNum();
+							}
+						}
+					});
+				}else{
+					gotologin();
 				}
 			}
 

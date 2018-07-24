@@ -130,24 +130,26 @@
 						var yunfei = 0;
 						var numAllTotal = 0;
 						for(var i in data){
-							h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
-							h = h + "<td><img class='main_image1' src='/upload/"+data[i].imgname+"'></img></td>";
-							h = h + "<td>"+data[i].name+"</td>";
-							h = h + "<td style='color:red'>¥"+data[i].price+"</td>";
-							h = h + "<td>"+data[i].num+"</td>";
-							h = h + "<td style='color:red'>¥"+(data[i].price)*(data[i].num)+"</td>";
-							h = h + "<td>"+data[i].weight+"</td>";
-							h = h + "</tr>";
-							h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
-							h = h + "<td colspan='7' style='height:10px;'></td>";
-							h = h + "</tr>";
-							numTotal = numTotal + data[i].num;
-							numPTotal = numPTotal + (data[i].price)*(data[i].num);
-							//numWeight = numWeight + data[i].weight;
-							if(idlist==""){
-								idlist = data[i].id;
-							}else{
-								idlist = idlist + "@" + data[i].id;
+							if(data[i].selected == 1){
+								h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
+								h = h + "<td><img class='main_image1' src='/upload/"+data[i].imgname+"'></img></td>";
+								h = h + "<td>"+data[i].name+"</td>";
+								h = h + "<td style='color:red'>¥"+data[i].price+"</td>";
+								h = h + "<td>"+data[i].num+"</td>";
+								h = h + "<td style='color:red'>¥"+(data[i].price)*(data[i].num)+"</td>";
+								h = h + "<td>"+data[i].weight+"</td>";
+								h = h + "</tr>";
+								h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
+								h = h + "<td colspan='7' style='height:10px;'></td>";
+								h = h + "</tr>";
+								numTotal = numTotal + data[i].num;
+								numPTotal = numPTotal + (data[i].price)*(data[i].num);
+								//numWeight = numWeight + data[i].weight;
+								if(idlist==""){
+									idlist = data[i].id;
+								}else{
+									idlist = idlist + "@" + data[i].id;
+								}
 							}
 						}	
 						$("#cartBody").html(h);
@@ -177,6 +179,9 @@
 			function createBooking(){
 				var address = $("#linkaddress").html()+" "+$("#linkinfo").html();
 				var remark = $("#remark").val();
+				if(address == " "){
+					alert("请先填写收货信息");return false;
+				}
 				$.ajax({
 						type: "post",
 						url: "/service/createBooking",

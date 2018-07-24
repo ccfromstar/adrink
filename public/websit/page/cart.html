@@ -58,7 +58,7 @@
 						<tr style="background-color: rgb(229,229,229)">
 							<td style="padding-top:10px;padding-bottom: 10px;"><input style="margin-left: 10px;" type="checkbox" checked="checked" name=""></td>
 							<td>全选</td>
-							<td>清除失效宝贝</td>
+							<td style="cursor:pointer;">清除失效宝贝</td>
 							<td>已选商品<span style="margin-left:5px;margin-right:5px;color:red" id="numTotal1"></span>件</td>
 							<td>合计（不含运费）</td>
 							<td><span style="color:red;font-weight: bold;font-size:16px;" id="numPTotal1"></span></td>
@@ -72,6 +72,10 @@
 		<script type="text/javascript">
 			
 			$(function(){
+				getCart();
+			});
+
+			function getCart(){
 				$.ajax({
 					type: "post",
 					url: "/service/getCart",
@@ -83,20 +87,26 @@
 						var numTotal = 0;
 						var numPTotal = 0;
 						for(var i in data){
+							var ck = 'checked';
+							if(data[i].selected == 0){
+								ck = '';
+							}else{
+								numTotal = numTotal + data[i].num;
+								numPTotal = numPTotal + (data[i].price)*(data[i].num);
+							}
 							h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
-							h = h + "<td><input style='margin-left: 10px;' checked='checked' type='checkbox' name=''></td>";
+							h = h + "<td><input style='margin-left: 10px;' "+ck+" type='checkbox' name='checkP_"+i+"' onclick='setCheck("+i+","+data[i].cid+")'></td>";
 							h = h + "<td><img class='main_image1' src='/upload/"+data[i].imgname+"'></img></td>";
 							h = h + "<td>"+data[i].name+"</td>";
 							h = h + "<td style='color:red'>¥"+data[i].price+"</td>";
-							h = h + "<td><input style='width:30px' value='"+data[i].num+"' /></td>";
+							h = h + "<td><input id='numP_"+i+"' style='width:30px' value='"+data[i].num+"' onblur='setCart("+i+","+data[i].cid+")' /></td>";
 							h = h + "<td style='color:red'>¥"+(data[i].price)*(data[i].num)+"</td>";
-							h = h + "<td style='text-align: right;padding-right: 30px;'>删除</td>";
+							h = h + "<td style='text-align: right;padding-right: 30px;cursor:pointer;' onclick='delCart("+data[i].cid+")'>删除</td>";
 							h = h + "</tr>";
 							h = h + "<tr style='background-color:white;border:1px solid rgb(208,208,208);'>";
 							h = h + "<td colspan='7' style='height:10px;'></td>";
 							h = h + "</tr>";
-							numTotal = numTotal + data[i].num;
-							numPTotal = numPTotal + (data[i].price)*(data[i].num);
+							
 						}	
 						$("#cartBody").html(h);
 						$("#numTotal").html(numTotal);
@@ -105,10 +115,69 @@
 						$("#numPTotal1").html("¥"+numPTotal);
 					}
 				});
-			});
+			}
+
+			function setCheck(i,id){
+				//console.log(jqchk("checkP_"+i));
+				//console.log(id);
+				var sed = 0;
+				if(jqchk("checkP_"+i) == 'on'){
+					sed = 1;
+				}
+				$.ajax({
+					type: "post",
+					url: "/service/setChecked",
+					data: {
+						id:id,
+						sed:sed
+					},
+					success: function(data) {
+						getCart();
+					}
+				});
+			}
+
+			 function jqchk(name){ //jquery获取复选框值
+			      var chk_value = '';
+			      $('input[name="' + name + '"]:checked').each(function (){
+			      		var val = $(this).val();
+			      		chk_value = val;
+			      });
+			      return chk_value;
+			  }
 
 			function gotoBooking(){
+				if(Number($("#numTotal").html())==0){
+					alert("您还没有选择产品");return false;
+				}
 				window.location = 'booking.html';
+			}
+
+			function setCart(i,id){
+				$.ajax({
+					type: "post",
+					url: "/service/setCart",
+					data: {
+						id:id,
+						num:$("#numP_"+i).val()
+					},
+					success: function(data) {
+						getCart();
+					}
+				});
+			}
+
+			function delCart(id){
+				$.ajax({
+					type: "post",
+					url: "/service/delCart",
+					data: {
+						id:id
+					},
+					success: function(data) {
+						getCart();
+					}
+				});
 			}
 		</script>
 	</body>

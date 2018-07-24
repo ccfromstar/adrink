@@ -697,6 +697,29 @@ exports.servicedo = function(req, res) {
 			if(err) return console.error(err.stack);
 			res.send("200");
 		});
+	} else if(_sql == "setCart") {
+		var id = req.param("id");
+		var num = req.param("num");
+		var sql = "update cart set num = '"+num+"' where id = "+id;
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			res.send("200");
+		});
+	} else if(_sql == "setChecked") {
+		var id = req.param("id");
+		var sed = req.param("sed");
+		var sql = "update cart set selected = '"+sed+"' where id = "+id;
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			res.send("200");
+		});
+	}  else if(_sql == "delCart") {
+		var id = req.param("id");
+		var sql = "delete from cart where id = "+id;
+		mysql.query(sql, function(err, result) {
+			if(err) return console.error(err.stack);
+			res.send("200");
+		});
 	} else if(_sql == "insertRole") {
 		var username = req.param("username");
 		var password = req.param("password");

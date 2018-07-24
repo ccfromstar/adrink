@@ -9,7 +9,7 @@ ON a.bianhao = b.bianhao;
 DROP VIEW IF EXISTS `v_cart`;
 CREATE VIEW v_cart
 AS
-SELECT a.*,b.userid,b.num,c.name as imgname,b.bookingno
+SELECT a.*,b.userid,b.num,b.selected,c.name as imgname,b.bookingno,b.id as cid
 FROM product a
 LEFT JOIN cart b
 ON a.id = b.proID
